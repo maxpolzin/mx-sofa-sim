@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<Node name="root" dt="0.005" showBoundingTree="0" gravity="0 -98.1 0">
+    <VisualStyle displayFlags="hideCollisionModels showBehaviorModels" />
+    
+    <RequiredPlugin name="Sofa.Component.AnimationLoop"/> <!-- Needed to use components [FreeMotionAnimationLoop] -->
+    <RequiredPlugin name="Sofa.Component.Collision.Detection.Algorithm"/> <!-- Needed to use components [BVHNarrowPhase BruteForceBroadPhase DefaultPipeline] -->
+    <RequiredPlugin name="Sofa.Component.Collision.Detection.Intersection"/> <!-- Needed to use components [MinProximityIntersection] -->
+    <RequiredPlugin name="Sofa.Component.Collision.Geometry"/> <!-- Needed to use components [LineCollisionModel PointCollisionModel TriangleCollisionModel] -->
+    <RequiredPlugin name="Sofa.Component.Collision.Response.Contact"/> <!-- Needed to use components [DefaultContactManager] -->
+    <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Correction"/> <!-- Needed to use components [GenericConstraintCorrection] -->
+    <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Solver"/> <!-- Needed to use components [GenericConstraintSolver] -->
+    <RequiredPlugin name="Sofa.Component.IO.Mesh"/> <!-- Needed to use components [MeshOBJLoader] -->
+    <RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [SparseLDLSolver] -->
+    <RequiredPlugin name="Sofa.Component.Mapping.Linear"/> <!-- Needed to use components [BarycentricMapping] -->
+    <RequiredPlugin name="Sofa.Component.Mass"/> <!-- Needed to use components [UniformMass] -->
+    <RequiredPlugin name="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->
+    <RequiredPlugin name="Sofa.Component.SolidMechanics.FEM.Elastic"/> <!-- Needed to use components [HexahedronFEMForceField] -->
+    <RequiredPlugin name="Sofa.Component.StateContainer"/> <!-- Needed to use components [MechanicalObject] -->
+    <RequiredPlugin name="Sofa.Component.Topology.Container.Constant"/> <!-- Needed to use components [MeshTopology] -->
+    <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [HexahedronSetGeometryAlgorithms HexahedronSetTopologyContainer HexahedronSetTopologyModifier QuadSetGeometryAlgorithms QuadSetTopologyContainer QuadSetTopologyModifier] -->
+    <RequiredPlugin name="Sofa.Component.Topology.Container.Grid"/> <!-- Needed to use components [SparseGridRamificationTopology] -->
+    <RequiredPlugin name="Sofa.Component.Topology.Mapping"/> <!-- Needed to use components [Hexa2QuadTopologicalMapping] -->
+    <RequiredPlugin name="Sofa.Component.Visual"/> <!-- Needed to use components [RecordedCamera VisualStyle] -->
+    <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->
+
+    <FreeMotionAnimationLoop />
+    <GenericConstraintSolver unbuilt="false" tolerance="1e-3" maxIt="200" printLog="0" multithreading="true"/>
+    <DefaultPipeline verbose="0" depth="10" draw="0" />
+    <BruteForceBroadPhase/>
+    <BVHNarrowPhase/>
+    <MinProximityIntersection name="Proximity" alarmDistance="1.2" contactDistance="0.1" />
+    <DefaultContactManager name="Response" response="FrictionContactConstraint" />
+
+    <MeshOBJLoader name="loader_0" filename="mesh/n0.obj"/>
+    <MeshOBJLoader name="loader_noodle" filename="mesh/Noodlebot.obj"/>
+
+    <LightManager />
+    <DirectionalLight name="light2" color="1 1 1" direction="0 1 0" />
+    
+    
+    <RecordedCamera name="cam" position="0 50 0" rotationLookAt="0 5 0" rotationStartPoint="0 30 80" rotationCenter="0 0 0" listening="true" startTime="20" endTime="100" drawRotation="0" rotationMode="1" />
+
+
+    <Node name="Noodlebot">
+        <EulerImplicitSolver name="cg_odesolver" printLog="false"  />
+        <SparseLDLSolver  template="CompressedRowSparseMatrixd" name="Torus1_SparseLDLSolver" printLog="false" />
+
+        <SparseGridRamificationTopology name="grid" n="10 10 10" fileTopology="mesh/Noodlebot.obj" nbVirtualFinerLevels="3" finestConnectivity="0"/>
+        <MechanicalObject name="Torus1" scale3d="1 1 1" translation="0 150 -50" rotation="120 -20 60"/>
+        <DiagonalMass totalMass="1.0"/>
+ 
+        <HexahedronFEMForceField name="FEM" youngModulus="100" poissonRatio="0.25" method="large" />
+        <GenericConstraintCorrection name="Torus1_ConstraintCorrection" printLog="0" />
+
+        <Node name="Surf">
+            <include href="Objects/HexahedronSetTopology.xml" src="@../grid" drawHexa="1" />
+            <Node name="Q">
+                <QuadSetTopologyContainer  name="Container" />
+                <QuadSetTopologyModifier   name="Modifier" />
+                <QuadSetGeometryAlgorithms name="GeomAlgo"   template="Vec3d" />
+                <Hexa2QuadTopologicalMapping input="@../Container" output="@Container" />
+
+                <TriangleCollisionModel />
+                <PointCollisionModel />
+            </Node>
+        </Node>
+        <Node name="VisuTorus" tags="Visual">
+            <OglModel name="Visual" color="blue" src="@../../loader_noodle" />
+            <BarycentricMapping input="@.." output="@Visual" />
+        </Node>
+    </Node>
+
+
+
+    <Node name="Floor">
+        <MeshOBJLoader name="loader" filename="mesh/mx_floor.obj" handleSeams="1"/>
+        <MeshTopology src="@loader" />
+        <MechanicalObject name="Floor" src="@loader" scale3d="100 1 100"  rotation="20 0 0"/>
+        <TriangleCollisionModel name="FloorT" simulated="1" moving="0" />
+        <LineCollisionModel name="FloorL" simulated="1" moving="0"/>  
+        <PointCollisionModel name="FloorP" simulated="1" moving="0" />
+        <Node name="VisuFloor">
+            <OglModel name="FloorV" src="@../loader" scaleTex="18 18" texturename="textures/floor.bmp" rotation="20 0 0" scale3d="20 0 100"/>
+        </Node>
+    </Node>
+
+
+
+</Node>
