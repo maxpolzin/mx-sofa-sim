@@ -46,9 +46,9 @@
 
         <SparseGridRamificationTopology name="grid" n="10 10 10" fileTopology="mesh/Noodlebot.obj" nbVirtualFinerLevels="3" finestConnectivity="0"/>
         <MechanicalObject name="Torus1" scale3d="1 1 1" translation="0 150 -50" rotation="120 -20 60"/>
-        <DiagonalMass totalMass="3.0"/>
+        <DiagonalMass totalMass="2.0"/>
  
-        <HexahedronFEMForceField name="FEM" youngModulus="1000" poissonRatio="0.000015" method="large" />
+        <HexahedronFEMForceField name="FEM" youngModulus="1500" poissonRatio="0.000015" method="large" />
         <GenericConstraintCorrection name="Torus1_ConstraintCorrection" printLog="0" />
 
         <Node name="Surf">
