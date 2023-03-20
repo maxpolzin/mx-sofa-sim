@@ -89,14 +89,14 @@
 
 
     <Node name="Floor">
-        <MeshOBJLoader name="loader" filename="mesh/mx_floor.obj" handleSeams="1"/>
+        <MeshOBJLoader name="loader" filename="Demos/mx_simulation/mx_floor.obj" handleSeams="1"/>
         <MeshTopology src="@loader" />
         <MechanicalObject name="Floor" src="@loader" scale3d="3000 0 5000" translation="0 0 0" rotation="20 0 0"/>
         <TriangleCollisionModel name="FloorT" simulated="0" moving="0" />
         <LineCollisionModel name="FloorL" simulated="0" moving="0"/>  
         <PointCollisionModel name="FloorP" simulated="0" moving="0" />
         <Node name="VisuFloor">
-            <OglModel name="FloorV" src="@../loader" scaleTex="18 18" texturename="textures/floor.bmp" translation="0 0 0" rotation="20 0 0" scale3d="3000 0 5000"/>
+            <OglModel name="FloorV" src="@../loader" scaleTex="18 18" texturename="Demos/mx_simulation/floor.bmp" translation="0 0 0" rotation="20 0 0" scale3d="3000 0 5000"/>
         </Node>
     </Node>
 
