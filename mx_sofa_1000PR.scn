@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<Node name="root" dt="0.01" showBoundingTree="0" gravity="0 -98.1 0">
+<Node name="root" dt="0.01" showBoundingTree="0" gravity="0 -9810 0">
     <VisualStyle displayFlags="hideCollisionModels showBehaviorModels" />
     
     <RequiredPlugin name="Sofa.Component.AnimationLoop"/> <!-- Needed to use components [FreeMotionAnimationLoop] -->
@@ -24,14 +24,14 @@
     <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->
 
     <FreeMotionAnimationLoop />
-    <GenericConstraintSolver unbuilt="false" tolerance="1e-3" maxIt="200" printLog="0" multithreading="true"/>
+    <GenericConstraintSolver unbuilt="false" tolerance="1e-1" maxIt="200" printLog="0" multithreading="true"/>
     <DefaultPipeline verbose="0" depth="10" draw="0" />
     <BruteForceBroadPhase/>
     <BVHNarrowPhase/>
-    <MinProximityIntersection name="Proximity" alarmDistance="1.2" contactDistance="0.1" />
+    <MinProximityIntersection name="Proximity" alarmDistance="100" contactDistance="30" />
     <DefaultContactManager name="Response" response="FrictionContactConstraint" />
 
-    <MeshOBJLoader name="loader_noodle" filename="mesh/Noodlebot.obj"/>
+    <MeshOBJLoader name="loader_noodle" filename="mesh/Body8_lowres_mm.obj"/>
 
     <LightManager />
     <DirectionalLight name="light2" color="1 1 1" direction="0.5 1 0" />
@@ -40,15 +40,18 @@
     <!-- <RecordedCamera name="cam" position="0 50 0" rotationLookAt="0 5 0" rotationStartPoint="0 30 80" rotationCenter="0 0 0" listening="true" startTime="20" endTime="100" drawRotation="0" rotationMode="1" /> -->
 
 
+    <!-- x, y, z -->
+    <!-- north, up, east -->
+
     <Node name="Noodlebot">
         <EulerImplicitSolver name="cg_odesolver" printLog="false"  />
         <SparseLDLSolver  template="CompressedRowSparseMatrixd" name="Torus1_SparseLDLSolver" printLog="false" />
 
-        <SparseGridRamificationTopology name="grid" n="10 10 10" fileTopology="mesh/Noodlebot.obj" nbVirtualFinerLevels="3" finestConnectivity="0"/>
-        <MechanicalObject name="Torus1" scale3d="1 1 1" translation="0 150 -50" rotation="120 -20 60"/>
+        <SparseGridRamificationTopology name="grid" n="10 10 10" fileTopology="mesh/Body8_lowres_mm.obj" nbVirtualFinerLevels="3" finestConnectivity="0"/>
+        <MechanicalObject name="Torus1" scale3d="1 1 1" translation="0 1050 -50" rotation="120 -20 60"/>
         <DiagonalMass totalMass="2.0"/>
  
-        <HexahedronFEMForceField name="FEM" youngModulus="1500" poissonRatio="0.000015" method="large" />
+        <HexahedronFEMForceField name="FEM" youngModulus="75" poissonRatio="0.07" method="large" />
         <GenericConstraintCorrection name="Torus1_ConstraintCorrection" printLog="0" />
 
         <Node name="Surf">
@@ -74,12 +77,12 @@
     <Node name="Floor">
         <MeshOBJLoader name="loader" filename="mesh/mx_floor.obj" handleSeams="1"/>
         <MeshTopology src="@loader" />
-        <MechanicalObject name="Floor" src="@loader" scale3d="5 0 15"  rotation="20 0 0"/>
+        <MechanicalObject name="Floor" src="@loader" scale3d="3000 0 5000"  rotation="20 0 0"/>
         <TriangleCollisionModel name="FloorT" simulated="0" moving="0" />
         <LineCollisionModel name="FloorL" simulated="0" moving="0"/>  
         <PointCollisionModel name="FloorP" simulated="0" moving="0" />
         <Node name="VisuFloor">
-            <OglModel name="FloorV" src="@../loader" scaleTex="18 18" texturename="textures/floor.bmp" rotation="20 0 0" scale3d="5 0 15"/>
+            <OglModel name="FloorV" src="@../loader" scaleTex="18 18" texturename="textures/floor.bmp" rotation="20 0 0" scale3d="3000 0 5000"/>
         </Node>
     </Node>
 
