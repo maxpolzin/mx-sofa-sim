@@ -42,7 +42,7 @@
     <MinProximityIntersection name="Proximity" alarmDistance="100" contactDistance="30" />
     <DefaultContactManager name="Response" response="FrictionContactConstraint" />
 
-    <MeshOBJLoader name="loader_noodle" filename="mesh/Body8_lowres_mm.obj"/>
+    <MeshOBJLoader name="loader_noodle" filename="Demos/mx_simulation/Body8_lowres_mm_2.obj"/>
 
     <LightManager />
     <DirectionalLight name="light2" color="1 1 1" direction="0.5 1 0" />
@@ -59,7 +59,7 @@
         <EulerImplicitSolver name="cg_odesolver" printLog="false"  />
         <SparseLDLSolver  template="CompressedRowSparseMatrixd" name="Torus1_SparseLDLSolver" printLog="false" />
 
-        <SparseGridRamificationTopology name="grid" n="10 10 10" fileTopology="mesh/Body8_lowres_mm.obj" nbVirtualFinerLevels="3" finestConnectivity="0"/>
+        <SparseGridRamificationTopology name="grid" n="10 10 10" fileTopology="Demos/mx_simulation/Body8_lowres_mm_2.obj" nbVirtualFinerLevels="3" finestConnectivity="0"/>
         <MechanicalObject name="Torus1" scale3d="1 1 1" translation="0 1050 -50" rotation="120 -20 60"/>
         <DiagonalMass totalMass="2.0"/>
  
