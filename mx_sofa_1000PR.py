@@ -1,6 +1,8 @@
 from stlib3.scene import MainHeader, ContactHeader
 from stlib3.physics.rigid import Floor
 # from stlib3.physics.rigid import Cube
+from s90_servo import ServoMotor, ServoArm, ActuatedArm
+from stlib3.scene import Scene
 
 def createScene(rootNode):
     """This is my first scene"""
@@ -27,13 +29,18 @@ def createScene(rootNode):
                   "Sofa.GL.Component.Rendering3D",
                   "Sofa.GL.Component.Rendering2D",
                   "Sofa.GL.Component.Shader",
+                  "ArticulatedSystemPlugin",
+                  "Sofa.Component.Constraint.Projective",
+                  "Sofa.Component.SolidMechanics.Spring",
                   "Sofa.Component.Mapping.NonLinear",
                   "Sofa.Component.LinearSolver.Iterative"]
 
     MainHeader(rootNode, dt=0.005, gravity=[0.0, -9810.0, 0.0], plugins=pluginList)
-    ContactHeader(rootNode, alarmDistance=10, contactDistance=5, frictionCoef=0.3)
+    ContactHeader(rootNode, alarmDistance=10, contactDistance=5, frictionCoef=0.8)
 
  
+
+
 
     noodleNode = rootNode.addChild('Noodle')
 
@@ -61,6 +68,26 @@ def createScene(rootNode):
     noodleCollis.addObject('PointCollisionModel')
     noodleCollis.addObject('BarycentricMapping')
 
+
+
+
+    # rootNode.addChild(ServoMotor(rootNode, scale3d=[100,100,100]))
+
+
+
+    # rootNode.servomotor = rootNode.addChild(ServoMotor(name="ServoMotor"))
+    # rootNode.servoarm = rootNode.servomotor.Articulation.ServoWheel.addChild(ServoArm(name="ServoArm"))
+    # rootNode.servoarm.setRigidMapping(rootNode.ServoMotor.Articulation.ServoWheel.dofs.getLinkPath())
+
+    # # # add a public attribute and connect it to the private one.
+    # self.ServoMotor.angleIn.setParent(self.angleIn)
+
+    # # add a public attribute and connect it to the internal one.
+    # self.angleOut.setParent(self.ServoMotor.angleOut)
+
+
+    scene = Scene(rootNode,iterative=False)
+    arm = scene.Simulation.addChild(ActuatedArm(name='ActuatedArm', translation=[0.0, 0.0, 0.0]))
 
     
 
