@@ -1,6 +1,6 @@
 from stlib3.scene import MainHeader, ContactHeader
 from stlib3.physics.rigid import Floor
-from stlib3.physics.rigid import Cube
+# from stlib3.physics.rigid import Cube
 
 def createScene(rootNode):
     """This is my first scene"""
@@ -31,14 +31,9 @@ def createScene(rootNode):
                   "Sofa.Component.LinearSolver.Iterative"]
 
     MainHeader(rootNode, dt=0.005, gravity=[0.0, -9810.0, 0.0], plugins=pluginList)
-    ContactHeader(rootNode, alarmDistance=10, contactDistance=5)
+    ContactHeader(rootNode, alarmDistance=10, contactDistance=5, frictionCoef=0.3)
 
-
-    rootNode.addObject('DefaultContactManager', response='FrictionContactConstraint')
-
-
-
-
+ 
 
     noodleNode = rootNode.addChild('Noodle')
 
@@ -51,7 +46,7 @@ def createScene(rootNode):
     noodleNode.addObject('MechanicalObject', name='dofs', translation="0 1050 -50", rotation="120 -20 60")
     noodleNode.addObject('DiagonalMass', totalMass=2.0)
 
-    noodleNode.addObject('HexahedronFEMForceField', name='fem', youngModulus="175",poissonRatio="0.07", method="large")
+    noodleNode.addObject('HexahedronFEMForceField', name='fem', youngModulus="275",poissonRatio="0.07", method="large")
     noodleNode.addObject('GenericConstraintCorrection', name="constraint_correction")
 
     noodleVisu = noodleNode.addChild('noodleVisu')
