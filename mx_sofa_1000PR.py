@@ -27,7 +27,6 @@ def createScene(rootNode):
                   "Sofa.GL.Component.Rendering3D",
                   "Sofa.GL.Component.Rendering2D",
                   "Sofa.GL.Component.Shader",
-                  "MultiThreading",
                   "Sofa.Component.Mapping.NonLinear",
                   "Sofa.Component.LinearSolver.Iterative"]
 
@@ -35,10 +34,13 @@ def createScene(rootNode):
     ContactHeader(rootNode, alarmDistance=10, contactDistance=5)
 
 
+    rootNode.addObject('DefaultContactManager', response='FrictionContactConstraint')
+
+
+
 
 
     noodleNode = rootNode.addChild('Noodle')
-
 
     noodleNode.addObject('EulerImplicitSolver', name='cg_odesolver')
     noodleNode.addObject('SparseLDLSolver', name='linearSolver', template="CompressedRowSparseMatrixd")
@@ -49,7 +51,7 @@ def createScene(rootNode):
     noodleNode.addObject('MechanicalObject', name='dofs', translation="0 1050 -50", rotation="120 -20 60")
     noodleNode.addObject('DiagonalMass', totalMass=2.0)
 
-    noodleNode.addObject('HexahedronFEMForceField', name='fem', youngModulus="375",poissonRatio="0.07", method="large")
+    noodleNode.addObject('HexahedronFEMForceField', name='fem', youngModulus="175",poissonRatio="0.07", method="large")
     noodleNode.addObject('GenericConstraintCorrection', name="constraint_correction")
 
     noodleVisu = noodleNode.addChild('noodleVisu')
