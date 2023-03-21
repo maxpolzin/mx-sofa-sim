@@ -19,6 +19,9 @@
     <RequiredPlugin name="Sofa.Component.Topology.Container.Constant"/> <!-- Needed to use components [MeshTopology] -->
     <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [HexahedronSetGeometryAlgorithms HexahedronSetTopologyContainer HexahedronSetTopologyModifier QuadSetGeometryAlgorithms QuadSetTopologyContainer QuadSetTopologyModifier] -->
     <RequiredPlugin name="Sofa.Component.Topology.Container.Grid"/> <!-- Needed to use components [SparseGridRamificationTopology] -->
+    
+    
+    
     <RequiredPlugin name="Sofa.Component.Topology.Mapping"/> <!-- Needed to use components [Hexa2QuadTopologicalMapping] -->
     <RequiredPlugin name="Sofa.Component.Visual"/> <!-- Needed to use components [RecordedCamera VisualStyle] -->
     <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->
@@ -59,7 +62,11 @@
         <EulerImplicitSolver name="cg_odesolver" printLog="false"  />
         <SparseLDLSolver  template="CompressedRowSparseMatrixd" name="Torus1_SparseLDLSolver" printLog="false" />
 
+
         <SparseGridRamificationTopology name="grid" n="10 10 10" fileTopology="Demos/mx_simulation/Body8_lowres_mm_2.obj" nbVirtualFinerLevels="3" finestConnectivity="0"/>
+        
+        
+        
         <MechanicalObject name="Torus1" scale3d="1 1 1" translation="0 1050 -50" rotation="120 -20 60"/>
         <DiagonalMass totalMass="2.0"/>
  
