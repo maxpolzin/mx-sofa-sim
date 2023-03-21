@@ -13,19 +13,34 @@ def createScene(rootNode):
                   "Sofa.Component.Constraint.Lagrangian.Correction",
                   "Sofa.Component.Constraint.Lagrangian.Solver",
                   "Sofa.Component.IO.Mesh",
-                  "Sofa.Component.Mapping.NonLinear",
-                  "Sofa.Component.LinearSolver.Iterative",
+                  "Sofa.Component.LinearSolver.Direct",
+                  "Sofa.Component.Mapping.Linear",
                   "Sofa.Component.Mass",
                   "Sofa.Component.ODESolver.Backward",
+                  "Sofa.Component.SolidMechanics.FEM.Elastic",
                   "Sofa.Component.StateContainer",
                   "Sofa.Component.Topology.Container.Constant",
+                  "Sofa.Component.Topology.Container.Dynamic",
+                  "Sofa.Component.Topology.Container.Grid",
+                  "Sofa.Component.Topology.Mapping",
                   "Sofa.Component.Visual",
-                  "Sofa.GL.Component.Rendering3D"]
+                  "Sofa.GL.Component.Rendering3D",
+                  "Sofa.GL.Component.Rendering2D",
+                  "Sofa.GL.Component.Shader",
+                  "MultiThreading",
+                  "Sofa.Component.Mapping.NonLinear",
+                  "Sofa.Component.LinearSolver.Iterative"]
 
-    MainHeader(rootNode, gravity=[0.0, -981.0, 0.0], plugins=pluginList)
+    MainHeader(rootNode, dt=0.005, gravity=[0.0, -981.0, 0.0], plugins=pluginList)
     ContactHeader(rootNode, alarmDistance=10, contactDistance=5)
-    # rootNode.VisualStyle.displayFlags = 'showCollisionModels'
-    rootNode.dt = 0.005
+
+
+
+
+    noodleNode = rootNode.addChild('Noodle')
+
+
+
 
     Floor(rootNode,
           translation=[0.0, -160.0, 0.0],
@@ -39,7 +54,7 @@ def createScene(rootNode):
           uniformScale=0.8,
           isAStaticObject=True)
 
-    for c in range(7):
+    for c in range(5):
         cube = Cube(rootNode,
                     name="Cube" + str(-210 + c * 70),
                     translation=[-210 + c * 70, 0.0, 0.0],
