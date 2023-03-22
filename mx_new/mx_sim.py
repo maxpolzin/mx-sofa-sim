@@ -7,11 +7,15 @@ from stlib3.solver import DefaultSolver
 from stlib3.physics.rigid import Cube, Sphere, Floor
 from stlib3.physics.deformable import ElasticMaterialObject
 from stlib3.visuals import VisualModel
+from fixing_box import FixingBox
+
+from stlib3.physics.mixedmaterial import Rigidify
+from stlib3.components import addOrientedBoxRoi
+
+from actuated_arm import ActuatedArm
 
 
 class Noodlebot(Sofa.Prefab):
-
-
     """Creates an object composed of an elastic material."""
     prefabParameters = [
         {'name': 'rotation', 'type': 'Vec3d', 'help': 'Rotation', 'default': [0.0, 0.0, 0.0]},
@@ -20,8 +24,6 @@ class Noodlebot(Sofa.Prefab):
         {'name': 'poissonRatio', 'type': 'double', 'help': 'Poisson ratio', 'default': 0.3},
         {'name': 'youngModulus', 'type': 'double', 'help': "Young's modulus", 'default': 18000},
         {'name': 'totalMass', 'type': 'double', 'help': 'Total mass', 'default': 2.0}]
-
-
 
     def __init__(self, *args, **kwargs):
         Sofa.Prefab.__init__(self, *args, **kwargs)
@@ -32,16 +34,19 @@ class Noodlebot(Sofa.Prefab):
         self.solver = self.addObject('SparseLDLSolver', name="solver", template="CompressedRowSparseMatrixd")
         self.loader = self.addObject('MeshOBJLoader', name='loader', triangulate=True, filename='mesh/Body8_lowres_mm_2.obj', rotation=list(self.rotation.value), translation=list(self.translation.value),
                                          scale3d=list(self.scale.value))
+
         self.dofs = self.addObject('MechanicalObject', template='Vec3d', name='dofs')
         self.mass = self.addObject('DiagonalMass', totalMass=self.totalMass.value, name='mass')
 
         self.container = self.addObject('SparseGridRamificationTopology', n=[10, 10, 10], src=self.loader.getLinkPath(), name='container')
 
+
+
         self.forcefield = self.addObject('TetrahedronFEMForceField', template='Vec3d',
                                             method='large', name='forcefield',
                                             poissonRatio=self.poissonRatio.value, youngModulus=self.youngModulus.value)
 
-        self.constraingcorrection = self.addObject('LinearSolverConstraintCorrection', name='constraingcorrection')
+        self.constraintcorrection = self.addObject('LinearSolverConstraintCorrection', name='constraintcorrection')
 
 
         self.visualmodel = self.addChild(VisualModel(visualMeshPath=self.loader.filename.value, rotation=list(self.rotation.value), translation=list(self.translation.value), scale=list(self.scale.value)))
@@ -58,7 +63,7 @@ class Noodlebot(Sofa.Prefab):
 
 
 
-
+ 
 def createScene(rootNode):
     """This is my first scene"""
 
@@ -80,7 +85,10 @@ def createScene(rootNode):
                   "Sofa.Component.Visual",
                   "Sofa.Component.Mapping.NonLinear",
                   "Sofa.GUI.Component",
-                  "Sofa.Component.LinearSolver.Iterative"]
+                  "Sofa.Component.LinearSolver.Iterative",
+                  "Sofa.Component.Engine.Select",
+                  "Sofa.Component.SolidMechanics.Spring"
+                  ]
 
 
 
@@ -88,15 +96,18 @@ def createScene(rootNode):
     scene.addMainHeader()
 
     scene.addObject('CollisionPipeline', name="DefaultPipeline") # To surpress warning from contactheader.py
-    scene.addContact(alarmDistance=50, contactDistance=10, frictionCoef=0.8)
+    scene.addContact(alarmDistance=150, contactDistance=30, frictionCoef=0.8)
 
 
-    scene.Modelling.addChild(Noodlebot(translation=[0.0,500.0,0.0], rotation=[60,20,30], youngModulus=30))
+
+    scene.Modelling.addChild(Noodlebot(translation=[0.0,500.0,0.0], rotation=[60,20,30], youngModulus=40))
 
 
-    
-    
-    
+    Cube(scene.Modelling, translation=[0.0,1200.0,0.0], uniformScale=100.1, color=[1.0, 0.0, 0.0, 1.0])
+    scene.Modelling.Cube.addObject('UncoupledConstraintCorrection')
+
+
     Floor(scene.Modelling, translation=[0.0, -160.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=75.0, isAStaticObject=True)
+
 
     return rootNode

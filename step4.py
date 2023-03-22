@@ -43,18 +43,18 @@ def createScene(rootNode):
 
 
 
-    scene.Modelling.addChild('Obstacle')
+    # scene.Modelling.addChild('Obstacle')
 
-    cylObst = Cylinder(parent=scene.Modelling.Obstacle, translation=[0, 100.0, -50],
-                        surfaceMeshFileName='Data/cylinder.stl',
-                        MOscale=1,
-                        uniformScale=1000.5,
-                        totalMass=0.032,
-                        isAStaticObject=False)
-    cylObst.mass.showAxisSizeFactor = 1
-    cylObst.mstate.name = 'dofs'
+    # cylObst = Cylinder(parent=scene.Modelling.Obstacle, translation=[0, 100.0, -50],
+    #                     surfaceMeshFileName='Data/cylinder.stl',
+    #                     MOscale=1,
+    #                     uniformScale=1000.5,
+    #                     totalMass=0.032,
+    #                     isAStaticObject=False)
+    # cylObst.mass.showAxisSizeFactor = 1
+    # cylObst.mstate.name = 'dofs'
 
-    scene.Simulation.addChild(cylObst)
+    # scene.Simulation.addChild(cylObst)
 
 
 # isAStaticObject
