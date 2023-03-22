@@ -148,7 +148,7 @@ class ServoMotor(Sofa.Prefab):
         servoBody.addObject('UniformMass', totalMass=0.01)
 
         visual = servoBody.addChild('VisualModel')
-        visual.addObject('MeshSTLLoader', name='loader', filename='./SG90_servomotor_finger.stl', scale=1e-3,
+        visual.addObject('MeshSTLLoader', name='loader', filename='./SG90_servomotor_finger.stl', scale=self.scale3d[0],
                          rotation=[0.0, -90.0, 0.0], translation=[-12.0e-3, -5.0e-3, 0.0])
         visual.addObject('MeshTopology', src='@loader')
         visual.addObject('OglModel', color=[0.15, 0.45, 0.75, 0.7], writeZTransparent=True)
