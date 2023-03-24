@@ -12,7 +12,6 @@ from stlib3.components import addOrientedBoxRoi
 from stlib3.physics.mixedmaterial import Rigidify
 
 
-
 class NoodleRobot(Sofa.Prefab):
     prefabParameters = [
         {"name": "rotation", "type": "Vec3d", "help": "Rotation in base frame", "default": [0.0, 0.0, 0.0]},
@@ -49,6 +48,11 @@ class NoodleRobot(Sofa.Prefab):
         rigidifiedStruct = Rigidify(self, self.elasticMaterial, groupIndices=indices, frames=frame,
                                     name="RigidifiedStructure")
 
+        # # Activate some rendering on the rigidified object.
+        # rigidifiedStruct.RigidParts.createObject("FixedConstraint", indices=0)
+
+
+
         # servoArm = arm.ServoMotor.Articulation.ServoWheel.ServoArm
         # servoArm.addChild(rigidifiedStruct.RigidParts)
         # servoArm.RigidParts.addObject('RigidRigidMapping', index=0, input=servoArm.dofs.getLinkPath())
@@ -61,9 +65,7 @@ class NoodleRobot(Sofa.Prefab):
 
 
     def elasticBody(self):
-        # Create a body as a child of the parent (the actuated finger)
         body = self.addChild("ElasticBody")
-
         e = body.addChild(ElasticMaterialObject(
                                         volumeMeshFileName="mesh/Body8_lowres_mm_gmsh.msh",
                                         poissonRatio=0.3,
@@ -117,10 +119,8 @@ def createScene(rootNode):
     scene.addContact(alarmDistance=50, contactDistance=10, frictionCoef=0.8)
 
 
-
     noodleRobot = NoodleRobot()
     scene.Modelling.addChild(noodleRobot)
-
 
 
     Floor(scene.Simulation, translation=[0.0, -160.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=75.0, isAStaticObject=True)
