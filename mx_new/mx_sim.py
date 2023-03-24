@@ -1,18 +1,10 @@
 
 import Sofa
 
-from stlib3.scene import Scene, MainHeader, ContactHeader
-from stlib3.solver import DefaultSolver
+from stlib3.scene import Scene
 
-from stlib3.physics.rigid import Cube, Sphere, Floor
-from stlib3.physics.deformable import ElasticMaterialObject
+from stlib3.physics.rigid import Cube,  Floor
 from stlib3.visuals import VisualModel
-from fixing_box import FixingBox
-
-from stlib3.physics.mixedmaterial import Rigidify
-from stlib3.components import addOrientedBoxRoi
-
-from actuated_arm import ActuatedArm
 
 
 class Noodlebot(Sofa.Prefab):
@@ -38,8 +30,7 @@ class Noodlebot(Sofa.Prefab):
         self.dofs = self.addObject('MechanicalObject', template='Vec3d', name='dofs')
         self.mass = self.addObject('DiagonalMass', totalMass=self.totalMass.value, name='mass')
 
-        self.container = self.addObject('SparseGridRamificationTopology', n=[10, 10, 10], src=self.loader.getLinkPath(), name='container')
-
+        self.container = self.addObject('SparseGridTopology', n=[10, 10, 10], src=self.loader.getLinkPath(), name='container')
 
 
         self.forcefield = self.addObject('TetrahedronFEMForceField', template='Vec3d',
@@ -99,8 +90,7 @@ def createScene(rootNode):
     scene.addContact(alarmDistance=150, contactDistance=30, frictionCoef=0.8)
 
 
-
-    scene.Modelling.addChild(Noodlebot(translation=[0.0,500.0,0.0], rotation=[60,20,30], youngModulus=40))
+    scene.Modelling.addChild(Noodlebot(translation=[0.0,500.0,0.0], rotation=[60,20,30], youngModulus=20))
 
 
     Cube(scene.Modelling, translation=[0.0,1200.0,0.0], uniformScale=100.1, color=[1.0, 0.0, 0.0, 1.0])
