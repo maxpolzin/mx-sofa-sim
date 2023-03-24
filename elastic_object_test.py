@@ -7,6 +7,8 @@ from stlib3.solver import DefaultSolver
 from stlib3.physics.rigid import Cube, Sphere, Floor
 from stlib3.physics.deformable import ElasticMaterialObject
 
+from stlib3.components import addOrientedBoxRoi
+from stlib3.physics.mixedmaterial import Rigidify
 
 
 def createScene(rootNode):
@@ -54,9 +56,25 @@ def createScene(rootNode):
                                     translation=[0.0, 500.0, 0.0], 
                                     rotation=[0.0, 0.0, 0.0])
 
-
-
     scene.Modelling.addChild(elasticobject)
+
+
+    # Define a region of interest to rigidify the nodes of the finger mesh clamped in the servo arm
+    box = addOrientedBoxRoi(scene.Modelling,
+                            name="boxROIclamped",
+                            position=[0,0,0],
+                            translation=[0.0, 320.0, 0.0],
+                            eulerRotation=[0.0, 0.0, 0.0],
+                            scale=[500, 300, 1000])
+    box.drawBoxes = True
+    box.init()
+
+    # Get the indices of the finger mesh in the ROI, and the ROI frame
+    indices = [[ind for ind in box.indices.value]]
+    frame = [[0, 0, 0, 0, 0, 0, 1]]
+
+    print(indices)
+
 
     Floor(scene.Simulation, translation=[0.0, -160.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=75.0, isAStaticObject=True)
 
