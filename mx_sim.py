@@ -94,9 +94,6 @@ def createScene(rootNode):
     scene.Modelling.addChild(Noodlebot(translation=[0.0,500.0,0.0], rotation=[60,20,30], youngModulus=30))
 
 
-    
-    
-    
     Floor(scene.Modelling, translation=[0.0, -160.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=75.0, isAStaticObject=True)
 
     return rootNode
