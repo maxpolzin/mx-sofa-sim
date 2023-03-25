@@ -12,8 +12,10 @@ from stlib3.components import addOrientedBoxRoi
 from stlib3.physics.mixedmaterial import Rigidify
 
 from stlib3.visuals import VisualModel
+from splib3.constants import Key
 
 
+import math
 
 
 class ServoMotor(Sofa.Prefab):
@@ -198,7 +200,6 @@ class WheelController(Sofa.Core.Controller):
         self.node = kwargs["node"]
         self.duration = 3.0
         self.time = 0.0
-        self.objectDof = kwargs["objectDof"]
         self.actuator = kwargs["actuator"]
         self.forceContact = 0.0
         self.numContact = 0
@@ -257,7 +258,7 @@ class NoodleRobot(Sofa.Prefab):
 
 
         # Load a servo motor
-        wheel = self.addChild(ActuatedWheel(name="ActuatedWheel", rotation=[90.0, 0, 90.0], translation=[0, 0, 0]))
+        wheel = self.addChild(ActuatedWheel(name="ActuatedWheel", rotation=[90.0, 90, 0.0], translation=[0, 0, 0]))
         wheel.ServoMotor.Articulation.dofs.position.value = [[wheel.angleIn.value]]  # Initialize the angle
         wheel.ServoMotor.minAngle.value = -2.02
         wheel.ServoMotor.maxAngle.value = -0.025
@@ -355,6 +356,8 @@ def createScene(rootNode):
     scene.addObject('CollisionPipeline', name="DefaultPipeline") # To surpress warning from contactheader.py
     scene.addContact(alarmDistance=50, contactDistance=10, frictionCoef=0.8)
 
+    # scene.Simulation.addObject('GenericConstraintCorrection')
+
 
     noodleRobot = NoodleRobot()
     scene.Modelling.addChild(noodleRobot)
@@ -366,10 +369,25 @@ def createScene(rootNode):
     scene.Simulation.addChild(noodleRobot.RigidifiedStructure.DeformableParts)
     scene.Simulation.DeformableParts.addObject('UncoupledConstraintCorrection')
 
-    scene.Simulation.addChild(noodleRobot.RigidifiedStructure.RigidParts)
-    scene.Simulation.RigidParts.addObject('UncoupledConstraintCorrection')
+    # scene.Simulation.addChild(noodleRobot.RigidifiedStructure.RigidParts)
+    # scene.Simulation.RigidParts.addObject('UncoupledConstraintCorrection')
 
     scene.Simulation.addChild(noodleRobot.ActuatedWheel)
+
+
+    # Add a controller to output some performance metric during the simulation
+    scene.addObject(WheelController(name='WheelController',
+                                     actuator=scene.Modelling.NoodleRobot.ActuatedWheel, node=rootNode))
+
+
+    # scene.Simulation.addObject('MechanicalMatrixMapper',
+    #                            name="deformableAndFreeCenterCoupling",
+    #                            template='Vec1,Vec3',
+    #                            object1=noodleRobot.ActuatedWheel.ServoMotor.Articulation.dofs.getLinkPath(),
+    #                            object2=noodleRobot.RigidifiedStructure.DeformableParts.dofs.getLinkPath(),
+    #                            nodeToParse=noodleRobot.RigidifiedStructure.DeformableParts.ElasticMaterialObject.getLinkPath())
+
+
 
 
     Floor(scene.Modelling, translation=[0.0, -160.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=75.0, isAStaticObject=True)
