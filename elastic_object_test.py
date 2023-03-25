@@ -216,14 +216,11 @@ class WheelController(Sofa.Core.Controller):
     def onAnimateBeginEvent(self, eventType):
 
         # Update of the servomotor angular displacement
-        # Rotation of pi/6 over self.duration (5s initially)
-        angularStep = math.pi / 6
-        angleInit = 0
-        self.time += self.node.dt.value
-        if self.time < self.duration:
-            self.actuator.ServoMotor.angleIn = angleInit + angularStep * self.time / self.duration
-        else:
-            self.actuator.ServoMotor.angleIn = angleInit + angularStep
+        angularStep = 0.01
+        # angleInit = 0
+        # self.time += self.node.dt.value
+        # if self.time < self.duration:
+        self.actuator.ServoMotor.angleIn = self.actuator.ServoMotor.angleIn.value + angularStep
 
         # Computation of the contact force applied on the object to grasp
         contactForces = self.node.getRoot().GenericConstraintSolver.constraintForces.value
@@ -290,12 +287,6 @@ class NoodleRobot(Sofa.Prefab):
         servoArm.RigidParts.addObject('RigidRigidMapping', index=0, input=servoArm.dofs.getLinkPath())
 
 
-
-
-        # # Add a fixing box to constrain the other part of the finger
-        # FixingBox(self, self.elasticMaterial, translation=[10.0e-3, 0.0, 14.0e-3], scale=[15e-3, 25e-3, 6e-3])
-        # self.FixingBox.BoxROI.drawBoxes = True
-
         self.addCollision()
 
 
@@ -350,13 +341,13 @@ def createScene(rootNode):
 
 
 
-    scene = Scene(rootNode, dt=0.005, gravity=[0.0, -9810.0, 0.0], iterative=True, plugins=pluginList)
+    scene = Scene(rootNode, dt=0.005, gravity=[0.0, -9810.0, 0.0], iterative=False, plugins=pluginList)
     scene.addMainHeader()
 
     scene.addObject('CollisionPipeline', name="DefaultPipeline") # To surpress warning from contactheader.py
     scene.addContact(alarmDistance=50, contactDistance=10, frictionCoef=0.8)
 
-    # scene.Simulation.addObject('GenericConstraintCorrection')
+    scene.Simulation.addObject('GenericConstraintCorrection')
 
 
     noodleRobot = NoodleRobot()
@@ -367,11 +358,6 @@ def createScene(rootNode):
 
     # Add the simulated elements to the Simulation node
     scene.Simulation.addChild(noodleRobot.RigidifiedStructure.DeformableParts)
-    scene.Simulation.DeformableParts.addObject('UncoupledConstraintCorrection')
-
-    # scene.Simulation.addChild(noodleRobot.RigidifiedStructure.RigidParts)
-    # scene.Simulation.RigidParts.addObject('UncoupledConstraintCorrection')
-
     scene.Simulation.addChild(noodleRobot.ActuatedWheel)
 
 
@@ -380,12 +366,12 @@ def createScene(rootNode):
                                      actuator=scene.Modelling.NoodleRobot.ActuatedWheel, node=rootNode))
 
 
-    # scene.Simulation.addObject('MechanicalMatrixMapper',
-    #                            name="deformableAndFreeCenterCoupling",
-    #                            template='Vec1,Vec3',
-    #                            object1=noodleRobot.ActuatedWheel.ServoMotor.Articulation.dofs.getLinkPath(),
-    #                            object2=noodleRobot.RigidifiedStructure.DeformableParts.dofs.getLinkPath(),
-    #                            nodeToParse=noodleRobot.RigidifiedStructure.DeformableParts.ElasticMaterialObject.getLinkPath())
+    scene.Simulation.addObject('MechanicalMatrixMapper',
+                               name="deformableAndFreeCenterCoupling",
+                               template='Vec1,Vec3',
+                               object1=noodleRobot.ActuatedWheel.ServoMotor.Articulation.dofs.getLinkPath(),
+                               object2=noodleRobot.RigidifiedStructure.DeformableParts.dofs.getLinkPath(),
+                               nodeToParse=noodleRobot.RigidifiedStructure.DeformableParts.ElasticMaterialObject.getLinkPath())
 
 
 
