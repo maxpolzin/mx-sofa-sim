@@ -146,15 +146,15 @@ class ServoArm(Sofa.Prefab):
 
 
 
-class ActuatedArm(Sofa.Prefab):
-    """ActuatedArm is a reusable sofa model of a S90 servo motor and the tripod actuation arm.
+class ActuatedWheel(Sofa.Prefab):
+    """ActuatedWheel is a reusable sofa model of a S90 servo motor and the tripod actuation arm.
            Parameters:
              - translation the position in space of the structure
              - eulerRotation the orientation of the structure
 
            Structure:
            Node : {
-                name : 'ActuatedArm'
+                name : 'ActuatedWheel'
                 MechanicalObject     // Rigid position of the motor
                 ServoMotor           // The s90 servo motor with its actuated wheel
                 ServoArm             // The actuation arm connected to ServoMotor.ServoWheel
@@ -189,6 +189,54 @@ class ActuatedArm(Sofa.Prefab):
 
 
 
+class WheelController(Sofa.Core.Controller):
+
+    def __init__(self, *args, **kwargs):
+        # These are needed (and the normal way to override from a python class)
+        Sofa.Core.Controller.__init__(self, *args, **kwargs)
+
+        self.node = kwargs["node"]
+        self.duration = 3.0
+        self.time = 0.0
+        self.objectDof = kwargs["objectDof"]
+        self.actuator = kwargs["actuator"]
+        self.forceContact = 0.0
+        self.numContact = 0
+
+        # Computation of the contact force applied on the object to grasp
+        self.node.getRoot().GenericConstraintSolver.computeConstraintForces.value = True
+
+    def onKeypressedEvent(self, event):
+        key = event['key']
+        if key == Key.P:
+            print("Number of contact points: " + str(self.numContact))
+            print("Norm of the contact force: " + str(self.forceContact))
+
+    def onAnimateBeginEvent(self, eventType):
+
+        # Update of the servomotor angular displacement
+        # Rotation of pi/6 over self.duration (5s initially)
+        angularStep = math.pi / 6
+        angleInit = 0
+        self.time += self.node.dt.value
+        if self.time < self.duration:
+            self.actuator.ServoMotor.angleIn = angleInit + angularStep * self.time / self.duration
+        else:
+            self.actuator.ServoMotor.angleIn = angleInit + angularStep
+
+        # Computation of the contact force applied on the object to grasp
+        contactForces = self.node.getRoot().GenericConstraintSolver.constraintForces.value
+
+        # print the number of nodes in contact and the norm of the largest contact force
+        self.numContact = 0
+        self.forceContact = 0
+        for contact in contactForces[0:-1:3]:
+            if contact > 0:
+                self.numContact += 1
+                self.forceContact += contact
+        self.forceContact /= self.node.dt.value
+
+
 
 
 class NoodleRobot(Sofa.Prefab):
@@ -209,7 +257,7 @@ class NoodleRobot(Sofa.Prefab):
 
 
         # Load a servo motor
-        wheel = self.addChild(ActuatedArm(name="ActuatedArm", rotation=[90.0, 0, 90.0], translation=[0, 0, 0]))
+        wheel = self.addChild(ActuatedWheel(name="ActuatedWheel", rotation=[90.0, 0, 90.0], translation=[0, 0, 0]))
         wheel.ServoMotor.Articulation.dofs.position.value = [[wheel.angleIn.value]]  # Initialize the angle
         wheel.ServoMotor.minAngle.value = -2.02
         wheel.ServoMotor.maxAngle.value = -0.025
@@ -239,6 +287,8 @@ class NoodleRobot(Sofa.Prefab):
         servoArm = wheel.ServoMotor.Articulation.ServoWheel.ServoArm
         servoArm.addChild(rigidifiedStruct.RigidParts)
         servoArm.RigidParts.addObject('RigidRigidMapping', index=0, input=servoArm.dofs.getLinkPath())
+
+
 
 
         # # Add a fixing box to constrain the other part of the finger
@@ -319,6 +369,7 @@ def createScene(rootNode):
     scene.Simulation.addChild(noodleRobot.RigidifiedStructure.RigidParts)
     scene.Simulation.RigidParts.addObject('UncoupledConstraintCorrection')
 
+    scene.Simulation.addChild(noodleRobot.ActuatedWheel)
 
 
     Floor(scene.Modelling, translation=[0.0, -160.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=75.0, isAStaticObject=True)
