@@ -112,7 +112,7 @@ def createScene(rootNode):
 
 
 
-    scene = Scene(rootNode, dt=0.005, gravity=[0.0, -9810.0, 0.0], plugins=pluginList)
+    scene = Scene(rootNode, dt=0.005, gravity=[0.0, -9810.0, 0.0], iterative=True, plugins=pluginList)
     scene.addMainHeader()
 
     scene.addObject('CollisionPipeline', name="DefaultPipeline") # To surpress warning from contactheader.py
@@ -123,6 +123,14 @@ def createScene(rootNode):
     scene.Modelling.addChild(noodleRobot)
 
 
-    Floor(scene.Simulation, translation=[0.0, -160.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=75.0, isAStaticObject=True)
+    # Add the simulated elements to the Simulation node
+    scene.Simulation.addChild(noodleRobot.RigidifiedStructure.DeformableParts)
+    scene.Simulation.DeformableParts.addObject('UncoupledConstraintCorrection')
+
+    scene.Simulation.addChild(noodleRobot.RigidifiedStructure.RigidParts)
+    scene.Simulation.RigidParts.addObject('UncoupledConstraintCorrection')
+
+
+    Floor(scene.Modelling, translation=[0.0, -160.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=75.0, isAStaticObject=True)
 
     return rootNode
