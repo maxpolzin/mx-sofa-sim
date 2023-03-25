@@ -217,9 +217,6 @@ class WheelController(Sofa.Core.Controller):
 
         # Update of the servomotor angular displacement
         angularStep = 0.01
-        # angleInit = 0
-        # self.time += self.node.dt.value
-        # if self.time < self.duration:
         self.actuator.ServoMotor.angleIn = self.actuator.ServoMotor.angleIn.value + angularStep
 
         # Computation of the contact force applied on the object to grasp
