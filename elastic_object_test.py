@@ -347,8 +347,6 @@ def createScene(rootNode):
     scene.Modelling.addChild(noodleRobot)
 
     
-
-
     # Add the simulated elements to the Simulation node
     scene.Simulation.addChild(noodleRobot.RigidifiedStructure.DeformableParts)
     scene.Simulation.addChild(noodleRobot.ActuatedWheel)
