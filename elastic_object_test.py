@@ -75,8 +75,8 @@ class ServoMotor(Sofa.Prefab):
         servoBody.addObject('UniformMass', totalMass=0.01)
 
         visual = servoBody.addChild('VisualModel')
-        visual.addObject('MeshSTLLoader', name='loader', filename='mesh/SG90_servomotor_finger.stl', scale=1e1,
-                         rotation=[0.0, -90.0, 0.0], translation=[-12.0e1, -5.0e1, 0.0])
+        visual.addObject('MeshSTLLoader', name='loader', filename='mesh/SG90_servomotor_finger.stl', scale=5,
+                         rotation=[0.0, -90.0, 0.0], translation=[-60, -25, 0.0])
         visual.addObject('MeshTopology', src='@loader')
         visual.addObject('OglModel', color=[0.15, 0.45, 0.75, 0.7], writeZTransparent=True)
         visual.addObject('RigidMapping', index=0)
@@ -86,7 +86,7 @@ class ServoMotor(Sofa.Prefab):
         angle.addObject('MechanicalObject', name='dofs', template='Vec1', position=[[self.getData('angleIn')]],
                         rest_position=self.getData('angleIn').getLinkPath())
         angle.addObject('RestShapeSpringsForceField', points=0, stiffness=1e9)
-        angle.addObject('UniformMass', totalMass=10.0)
+        angle.addObject('UniformMass', totalMass=0.01)
 
         servoWheel = angle.addChild('ServoWheel')
         servoWheel.addObject('MechanicalObject', name='dofs', template='Rigid3',
@@ -133,15 +133,15 @@ class ServoArm(Sofa.Prefab):
                        size=1,
                        template='Rigid3',
                        showObject=False,
-                       showObjectScale=5e1,
-                       translation2=[0, 0, -25e1])
+                       showObjectScale=25,
+                       translation2=[0, 0, -125])
 
     def setRigidMapping(self, path):
         self.addObject('RigidRigidMapping', name='mapping', input=path, index=self.indexInput.value)
 
-        visual = self.addChild(VisualModel(visualMeshPath='mesh/SG90_servoarm.stl', translation=[0, 0, 25.0e1],
+        visual = self.addChild(VisualModel(visualMeshPath='mesh/SG90_servoarm.stl', translation=[0, 0, 125],
                                            rotation=[-90, 0, 0],
-                                           scale=[1.0e1, 1.0e1, 1.0e1], color=[1., 1., 1., 0.75]))
+                                           scale=[5,5,5], color=[1., 1., 1., 0.75]))
         visual.OglModel.writeZTransparent = True
         visual.addObject('RigidMapping', name='mapping')
 
@@ -198,8 +198,6 @@ class WheelController(Sofa.Core.Controller):
         Sofa.Core.Controller.__init__(self, *args, **kwargs)
 
         self.node = kwargs["node"]
-        self.duration = 3.0
-        self.time = 0.0
         self.actuator = kwargs["actuator"]
         self.forceContact = 0.0
         self.numContact = 0
@@ -216,7 +214,7 @@ class WheelController(Sofa.Core.Controller):
     def onAnimateBeginEvent(self, eventType):
 
         # Update of the servomotor angular displacement
-        angularStep = 0.01
+        angularStep = 0.02
         self.actuator.ServoMotor.angleIn = self.actuator.ServoMotor.angleIn.value + angularStep
 
         # Computation of the contact force applied on the object to grasp
@@ -252,19 +250,17 @@ class NoodleRobot(Sofa.Prefab):
 
 
         # Load a servo motor
-        wheel = self.addChild(ActuatedWheel(name="ActuatedWheel", rotation=[90.0, 90, 0.0], translation=[0, 0, 0]))
+        wheel = self.addChild(ActuatedWheel(name="ActuatedWheel", rotation=[90.0, 90, 0.0], translation=[0, 140, 0]))
         wheel.ServoMotor.Articulation.dofs.position.value = [[wheel.angleIn.value]]  # Initialize the angle
-        wheel.ServoMotor.minAngle.value = -2.02
-        wheel.ServoMotor.maxAngle.value = -0.025
 
 
         # Define a region of interest to rigidify the nodes of the finger mesh clamped in the servo arm
         box = addOrientedBoxRoi(self,
                                 name="boxROIclamped",
                                 position=[list(i) for i in self.elasticMaterial.dofs.rest_position.value],
-                                translation=[0.0, 320.0, 0.0],
+                                translation=[0.0, 290.0, 0.0],
                                 eulerRotation=[0.0, 0.0, 0.0],
-                                scale=[500, 300, 1000])
+                                scale=[150, 120, 250])
         box.drawBoxes = True
         box.init()
 
@@ -373,6 +369,6 @@ def createScene(rootNode):
 
 
 
-    Floor(scene.Modelling, translation=[0.0, -160.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=75.0, isAStaticObject=True)
+    Floor(scene.Modelling, translation=[0.0, -600.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=75.0, isAStaticObject=True)
 
     return rootNode
