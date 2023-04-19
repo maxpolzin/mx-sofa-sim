@@ -1,0 +1,73 @@
+
+--- NEW SESSION: 01/04/2023 10:51:14 ---
+/Simulation/Cube/mstate.showColor = 1 1 1 1
+/Simulation/Red/actuator/actuatorPoint.showColor = 1 1 1 1
+/Simulation/Red/mstate.showColor = 1 1 1 1
+
+--- NEW SESSION: 01/04/2023 11:02:47 ---
+/Simulation/Red/mstate.showColor = 1 1 1 1
+/Simulation/AttachConstraint.twoWay = 1
+/Simulation/AttachConstraint.constraintFactor = 0
+
+--- NEW SESSION: 01/04/2023 11:08:30 ---
+/Simulation/Red/mstate.showColor = 1 1 1 1
+
+--- NEW SESSION: 01/04/2023 11:14:41 ---
+/Simulation/Red/mstate.velocity = -4.43789e-05 -71.1075 8.29646 1.22069 0.00277025 0.019521
+/Simulation/Red/mstate.free_velocity = -4.43789e-05 -71.1075 8.29646 1.22069 0.00277025 0.019521
+/Simulation/Red/mstate.constraint = 
+/Simulation/Red/mstate.showColor = 1 1 1 1
+/Simulation/Red/mstate.lambda(V_DERIV) = 0 0 0 0 0 0
+/Simulation/Red/mstate.constraint_dx(V_DERIV) = 0 0 0 0 0 0
+/Simulation/Blue/mstate.velocity = -4.43789e-05 -71.1075 8.29646 1.22069 0.00277025 0.019521
+/Simulation/Blue/mstate.constraint = 
+/Simulation/Blue/mstate.showColor = 1 1 1 1
+
+--- NEW SESSION: 01/04/2023 11:21:49 ---
+/Simulation/AttachConstraint.freeRotations = 1
+/Simulation/Red/mstate.velocity = 5.74872e-05 -1.47776 5.51508 -1.67571e-09 9.03221e-06 2.41957e-06
+/Simulation/Red/mstate.free_velocity = 5.74322e-05 -1.57174 5.49971 -1.68577e-09 8.91545e-06 2.38828e-06
+/Simulation/Red/mstate.constraint = 0 1 0 8.88123e-14 0.965926 0.258819 -1 0.258818 -0.965922  
+1 1 0 0.267307 -0.249401 0.930777 -0.963611 1.11979 0.576783  
+2 1 0 0.963611 0.0691842 -0.258199 0.267307 0.423182 1.11099  
+3 1 0 0 0.965926 0.258819 -0.999997 -0.25882 0.965929  
+4 1 0 0.267307 -0.249401 0.930777 -0.963611 -0.741766 0.0779809  
+5 1 0 0.963611 0.0691842 -0.258199 0.267307 0.939573 1.24936  
+6 1 0 -6.66132e-14 0.965926 0.258819 0.999996 0.25882 -0.965929  
+7 1 0 0.267307 -0.249401 0.930777 -0.963612 0.603398 0.438417  
+8 1 0 0.963611 0.0691842 -0.258199 0.267307 -1.43837 0.612193  
+9 1 0 -4.44089e-14 0.965926 0.258819 1 -0.258818 0.965922  
+10 1 0 0.267307 -0.249401 0.930777 -0.963612 -1.25816 -0.0603855  
+11 1 0 0.963611 0.0691842 -0.258199 0.267307 -0.921983 0.75056  
+
+/Simulation/Red/mstate.showColor = 1 1 1 1
+/Simulation/Red/mstate.lambda(V_DERIV) = 5.49904e-08 0.093981 0.0153721 1.00629e-11 1.1676e-07 3.12898e-08
+/Simulation/Red/mstate.constraint_dx(V_DERIV) = 5.49904e-10 0.00093981 0.000153721 1.00629e-13 1.1676e-09 3.12898e-10
+/Simulation/Red/Blue/mstate.velocity = 0.00011814 -2.03232 7.58471 -1.66391e-10 -0.000114645 -3.0719e-05
+/Simulation/Red/Blue/mstate.free_velocity = 0.000118253 -2.1263 7.56934 -1.68181e-10 -0.000114746 -3.07461e-05
+/Simulation/Red/Blue/mstate.constraint = 12 1 0 1.77635e-13 0.965926 0.258819 -0.799753 0.207119 -0.772979  
+13 1 0 0.267307 -0.249401 0.930777 -0.770889 0.895999 0.461472  
+14 1 0 0.963611 0.0691842 -0.258199 0.213846 0.338248 0.888717  
+15 1 0 2.44248e-13 0.965926 0.258819 -0.800247 -0.206991 0.772502  
+16 1 0 0.267307 -0.249401 0.930777 -0.770889 -0.593117 0.0624643  
+17 1 0 0.963611 0.0691842 -0.258199 0.213846 0.751826 0.999534  
+18 1 0 8.88182e-14 0.965926 0.258819 0.800247 0.206991 -0.772502  
+19 1 0 0.267307 -0.249401 0.930777 -0.770889 0.482422 0.350654  
+20 1 0 0.963611 0.0691842 -0.258199 0.213846 -1.15087 0.489709  
+21 1 0 -1.77636e-13 0.965926 0.258819 0.799753 -0.207119 0.772979  
+22 1 0 0.267307 -0.249401 0.930777 -0.770889 -1.00669 -0.0483535  
+23 1 0 0.963611 0.0691842 -0.258199 0.213846 -0.73729 0.600527  
+
+/Simulation/Red/Blue/mstate.showColor = 1 1 1 1
+/Simulation/Red/Blue/mstate.lambda(V_DERIV) = -1.13472e-07 0.093981 0.0153721 1.78945e-12 1.01044e-07 2.70769e-08
+/Simulation/Red/Blue/mstate.constraint_dx(V_DERIV) = -1.13472e-09 0.00093981 0.000153721 1.78947e-14 1.01044e-09 2.70769e-10
+
+--- NEW SESSION: 01/04/2023 12:17:33 ---
+/Simulation/AttachConstraint.freeRotations = 1
+/Simulation/AttachConstraint.restRotations = 1
+
+--- NEW SESSION: 01/04/2023 12:22:54 ---
+/Simulation/AttachConstraint.restRotations = 1
+
+--- NEW SESSION: 02/04/2023 22:32:02 ---
+/Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.globalPosition = 4.04997 -4.34552 7.63952
