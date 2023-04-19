@@ -71,3 +71,60 @@
 
 --- NEW SESSION: 02/04/2023 22:32:02 ---
 /Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.globalPosition = 4.04997 -4.34552 7.63952
+
+--- NEW SESSION: 19/04/2023 15:29:40 ---
+/Simulation/Red/Articulation/dofs.showColor = 1 1 1 1
+/Simulation/Red/Articulation/RestShapeSpringsForceField.springColor = 0 1 0 1
+/Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.posOnParent = 0 0 3.9
+/Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.globalPosition = 5.14991 -140.831 60.4785
+/Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.articulationProcess = 0
+/Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.posOnParent = 0 0 3.9
+/Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.globalPosition = 5.14991 -140.831 60.4785
+/Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.articulationProcess = 0
+/Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.posOnParent = 0 0 3.9
+/Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.globalPosition = 5.14991 -140.831 60.4785
+/Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.articulationProcess = 0
+/Simulation/Red/Articulation/dofs.showColor = 1 1 1 1
+/Simulation/Red/Articulation/RestShapeSpringsForceField.springColor = 0 1 0 1
+/Simulation/Red/Articulation/ArticulationCenter/ArticulationCenter.globalPosition = 4.04998 -3.77073 5.49438
+/Simulation/Red/Articulation/RestShapeSpringsForceField.springColor = 0 1 0 1
+
+--- NEW SESSION: 19/04/2023 16:06:27 ---
+/Simulation/CubeBot/Red/mstate.showColor = 1 1 1 1
+/Simulation/CubeBot/Red/Articulation/dofs.showColor = 1 1 1 1
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.time = 1.53
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.time = 1.53
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.time = 1.53
+/Simulation/CubeBot.time = 8.27
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.angleIn = 0
+/Simulation/CubeBot.time = 8.27
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.angleIn = 0
+/Simulation/CubeBot.time = 8.27
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.angleIn = 0
+/Simulation/CubeBot.angleIn = 0.5
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.time = 2.74
+/Simulation/CubeBot.angleIn = 0.5
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.time = 2.74
+/Simulation/CubeBot.angleIn = 0.5
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.time = 2.74
+/Simulation/CubeBot.time = 1.24
+/Simulation/CubeBot.angleIn = 0.5
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.time = 1.24
+/Simulation/CubeBot.angleIn = 0.5
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.time = 1.24
+/Simulation/CubeBot.angleIn = 0.5
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.animate = 1
+/Simulation/CubeBot.angleIn = 0.95
+/Simulation/CubeBot.time = 4.51
