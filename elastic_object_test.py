@@ -1,4 +1,3 @@
-
 import Sofa
 
 from stlib3.scene import Scene, MainHeader, ContactHeader
@@ -50,16 +49,53 @@ class ServoMotor(Sofa.Prefab):
         ## Direct access to the components
         servo.angle.value = 1.0
     """
+
     prefabParameters = [
-        {'name': 'rotation', 'type': 'Vec3d', 'help': 'Rotation', 'default': [0.0, 0.0, 0.0]},
-        {'name': 'translation', 'type': 'Vec3d', 'help': 'Translation', 'default': [0.0, 0.0, 0.0]},
-        {'name': 'scale3d', 'type': 'Vec3d', 'help': 'Scale 3d', 'default': [1.0e1, 1.0e1, 1.0e1]}]
+        {
+            "name": "rotation",
+            "type": "Vec3d",
+            "help": "Rotation",
+            "default": [0.0, 0.0, 0.0],
+        },
+        {
+            "name": "translation",
+            "type": "Vec3d",
+            "help": "Translation",
+            "default": [0.0, 0.0, 0.0],
+        },
+        {
+            "name": "scale3d",
+            "type": "Vec3d",
+            "help": "Scale 3d",
+            "default": [1.0e1, 1.0e1, 1.0e1],
+        },
+    ]
 
     prefabData = [
-        {'name': 'minAngle', 'help': 'min angle of rotation (in radians)', 'type': 'float', 'default': -100},
-        {'name': 'maxAngle', 'help': 'max angle of rotation (in radians)', 'type': 'float', 'default': 100},
-        {'name': 'angleIn', 'help': 'angle of rotation (in radians)', 'type': 'float', 'default': 0},
-        {'name': 'angleOut', 'help': 'angle of rotation (in degree)', 'type': 'float', 'default': 0}
+        {
+            "name": "minAngle",
+            "help": "min angle of rotation (in radians)",
+            "type": "float",
+            "default": -100,
+        },
+        {
+            "name": "maxAngle",
+            "help": "max angle of rotation (in radians)",
+            "type": "float",
+            "default": 100,
+        },
+        {
+            "name": "angleIn",
+            "help": "angle of rotation (in radians)",
+            "type": "float",
+            "default": 0,
+        },
+        {
+            "name": "angleOut",
+            "help": "angle of rotation (in degree)",
+            "type": "float",
+            "default": 0,
+        },
     ]
 
     def __init__(self, *args, **kwargs):
@@ -67,121 +103,214 @@ class ServoMotor(Sofa.Prefab):
 
     def init(self):
         # Servo body
-        servoBody = self.addChild('ServoBody')
-        servoBody.addObject('MechanicalObject', name='dofs', template='Rigid3', position=[[0., 0., 0., 0., 0., 0., 1.]],
-                            translation=list(self.translation.value), rotation=list(self.rotation.value),
-                            scale3d=list(self.scale3d.value))
-        servoBody.addObject('FixedConstraint', indices=0)
-        servoBody.addObject('UniformMass', totalMass=0.01)
+        servoBody = self.addChild("ServoBody")
+        servoBody.addObject(
+            "MechanicalObject",
+            name="dofs",
+            template="Rigid3",
+            position=[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]],
+            translation=list(self.translation.value),
+            rotation=list(self.rotation.value),
+            scale3d=list(self.scale3d.value),
+        )
+        servoBody.addObject("FixedConstraint", indices=0)
+        servoBody.addObject("UniformMass", totalMass=0.01)
 
-        visual = servoBody.addChild('VisualModel')
-        visual.addObject('MeshSTLLoader', name='loader', filename='mesh/SG90_servomotor_finger.stl', scale=5,
-                         rotation=[0.0, -90.0, 0.0], translation=[-60, -25, 0.0])
-        visual.addObject('MeshTopology', src='@loader')
-        visual.addObject('OglModel', color=[0.15, 0.45, 0.75, 0.7], writeZTransparent=True)
-        visual.addObject('RigidMapping', index=0)
+        visual = servoBody.addChild("VisualModel")
+        visual.addObject(
+            "MeshSTLLoader",
+            name="loader",
+            filename="mesh/SG90_servomotor_finger.stl",
+            scale=5,
+            rotation=[0.0, -90.0, 0.0],
+            translation=[-60, -25, 0.0],
+        )
+        visual.addObject("MeshTopology", src="@loader")
+        visual.addObject(
+            "OglModel", color=[0.15, 0.45, 0.75, 0.7], writeZTransparent=True
+        )
+        visual.addObject("RigidMapping", index=0)
 
         # Servo wheel
-        angle = self.addChild('Articulation')
-        angle.addObject('MechanicalObject', name='dofs', template='Vec1', position=[[self.getData('angleIn')]],
-                        rest_position=self.getData('angleIn').getLinkPath())
-        angle.addObject('RestShapeSpringsForceField', points=0, stiffness=1e7)
+        angle = self.addChild("Articulation")
+        angle.addObject(
+            "MechanicalObject",
+            name="dofs",
+            template="Vec1",
+            position=[[self.getData("angleIn")]],
+            rest_position=self.getData("angleIn").getLinkPath(),
+        )
+        angle.addObject("RestShapeSpringsForceField", points=0, stiffness=1e7)
         # angle.addObject('UniformMass', totalMass=0.01)
 
-        servoWheel = angle.addChild('ServoWheel')
-        servoWheel.addObject('MechanicalObject', name='dofs', template='Rigid3',
-                             position=[[0., 0., 0., 0., 0., 0., 1.], [0., 0., 0., 0., 0., 0., 1.]],
-                             translation=list(self.translation.value), rotation=list(self.rotation.value),
-                             scale3d=list(self.scale3d.value))
-        servoWheel.addObject('ArticulatedSystemMapping', input1="@../dofs", input2="@../../ServoBody/dofs",
-                             output="@./")
+        servoWheel = angle.addChild("ServoWheel")
+        servoWheel.addObject(
+            "MechanicalObject",
+            name="dofs",
+            template="Rigid3",
+            position=[
+                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+            ],
+            translation=list(self.translation.value),
+            rotation=list(self.rotation.value),
+            scale3d=list(self.scale3d.value),
+        )
+        servoWheel.addObject(
+            "ArticulatedSystemMapping",
+            input1="@../dofs",
+            input2="@../../ServoBody/dofs",
+            output="@./",
+        )
 
-        articulationCenter = angle.addChild('ArticulationCenter')
-        articulationCenter.addObject('ArticulationCenter', parentIndex=0, childIndex=1, posOnParent=[0., 0., 0.],
-                                     posOnChild=[0., 0., 0.])
-        articulation = articulationCenter.addChild('Articulations')
-        articulation.addObject('Articulation', translation=False, rotation=True, rotationAxis=[1, 0, 0],
-                               articulationIndex=0)
-        angle.addObject('ArticulatedHierarchyContainer', printLog=False)
+        articulationCenter = angle.addChild("ArticulationCenter")
+        articulationCenter.addObject(
+            "ArticulationCenter",
+            parentIndex=0,
+            childIndex=1,
+            posOnParent=[0.0, 0.0, 0.0],
+            posOnChild=[0.0, 0.0, 0.0],
+        )
+        articulation = articulationCenter.addChild("Articulations")
+        articulation.addObject(
+            "Articulation",
+            translation=False,
+            rotation=True,
+            rotationAxis=[1, 0, 0],
+            articulationIndex=0,
+        )
+        angle.addObject("ArticulatedHierarchyContainer", printLog=False)
 
         # The output
         self.angleOut.setParent(angle.dofs.position)
 
 
-
 class ServoArm(Sofa.Prefab):
     """ServoArm is a reusable sofa model of a servo arm for the S90 servo motor
 
-       Parameters:
-            parent:        node where the ServoArm will be attached
-            mappingInput:  the rigid mechanical object that will control the orientation of the servo arm
-            indexInput: (int) index of the rigid the ServoArm should be mapped to
+    Parameters:
+         parent:        node where the ServoArm will be attached
+         mappingInput:  the rigid mechanical object that will control the orientation of the servo arm
+         indexInput: (int) index of the rigid the ServoArm should be mapped to
     """
 
     prefabParameters = [
-        {'name': 'mappingInputLink', 'type': 'string',
-         'help': 'the rigid mechanical object that will control the orientation of the servo arm', 'default': ''},
-        {'name': 'indexInput', 'type': 'int', 'help': 'index of the rigid the ServoArm should be mapped to',
-         'default': 1}]
-
-    def __init__(self, *args, **kwargs):
-        Sofa.Prefab.__init__(self, *args, **kwargs)
-
-    def init(self):
-        self.addObject('MechanicalObject',
-                       name='dofs',
-                       size=1,
-                       template='Rigid3',
-                       showObject=False,
-                       showObjectScale=25,
-                       translation2=[0, 0, -125])
-
-    def setRigidMapping(self, path):
-        self.addObject('RigidRigidMapping', name='mapping', input=path, index=self.indexInput.value)
-
-        visual = self.addChild(VisualModel(visualMeshPath='mesh/SG90_servoarm.stl', translation=[0, 0, 125],
-                                           rotation=[-90, 0, 0],
-                                           scale=[5,5,5], color=[1., 1., 1., 0.75]))
-        visual.OglModel.writeZTransparent = True
-        visual.addObject('RigidMapping', name='mapping')
-
-
-
-
-class ActuatedWheel(Sofa.Prefab):
-    """ActuatedWheel is a reusable sofa model of a S90 servo motor and the tripod actuation arm.
-           Parameters:
-             - translation the position in space of the structure
-             - eulerRotation the orientation of the structure
-
-           Structure:
-           Node : {
-                name : 'ActuatedWheel'
-                MechanicalObject     // Rigid position of the motor
-                ServoMotor           // The s90 servo motor with its actuated wheel
-                ServoArm             // The actuation arm connected to ServoMotor.ServoWheel
-            }
-    """
-    prefabParameters = [
-        {'name': 'rotation', 'type': 'Vec3d', 'help': 'Rotation', 'default': [0.0, 0.0, 0.0]},
-        {'name': 'translation', 'type': 'Vec3d', 'help': 'Translation', 'default': [0.0, 0.0, 0.0]},
-        {'name': 'scale', 'type': 'Vec3d', 'help': 'Scale 3d', 'default': [1.0e-3, 1.0e-3, 1.0e-3]}]
-
-    prefabData = [
-        {'name': 'angleIn', 'group': 'ArmProperties', 'help': 'angle of rotation (in radians) of the arm',
-         'type': 'float', 'default': 0},
-        {'name': 'angleOut', 'group': 'ArmProperties', 'type': 'float', 'help': 'angle of rotation (in radians) of '
-                                                                                'the arm', 'default': 0}
+        {
+            "name": "mappingInputLink",
+            "type": "string",
+            "help": "the rigid mechanical object that will control the orientation of the servo arm",
+            "default": "",
+        },
+        {
+            "name": "indexInput",
+            "type": "int",
+            "help": "index of the rigid the ServoArm should be mapped to",
+            "default": 1,
+        },
     ]
 
     def __init__(self, *args, **kwargs):
         Sofa.Prefab.__init__(self, *args, **kwargs)
 
     def init(self):
-        self.servomotor = self.addChild(ServoMotor(name="ServoMotor", translation=self.translation.value,
-                                                   rotation=self.rotation.value))
-        self.servoarm = self.servomotor.Articulation.ServoWheel.addChild(ServoArm(name="ServoArm"))
-        self.servoarm.setRigidMapping(self.ServoMotor.Articulation.ServoWheel.dofs.getLinkPath())
+        self.addObject(
+            "MechanicalObject",
+            name="dofs",
+            size=1,
+            template="Rigid3",
+            showObject=False,
+            showObjectScale=25,
+            translation2=[0, 0, -125],
+        )
+
+    def setRigidMapping(self, path):
+        self.addObject(
+            "RigidRigidMapping", name="mapping", input=path, index=self.indexInput.value
+        )
+
+        visual = self.addChild(
+            VisualModel(
+                visualMeshPath="mesh/SG90_servoarm.stl",
+                translation=[0, 0, 125],
+                rotation=[-90, 0, 0],
+                scale=[5, 5, 5],
+                color=[1.0, 1.0, 1.0, 0.75],
+            )
+        )
+        visual.OglModel.writeZTransparent = True
+        visual.addObject("RigidMapping", name="mapping")
+
+
+class ActuatedWheel(Sofa.Prefab):
+    """ActuatedWheel is a reusable sofa model of a S90 servo motor and the tripod actuation arm.
+    Parameters:
+      - translation the position in space of the structure
+      - eulerRotation the orientation of the structure
+
+    Structure:
+    Node : {
+         name : 'ActuatedWheel'
+         MechanicalObject     // Rigid position of the motor
+         ServoMotor           // The s90 servo motor with its actuated wheel
+         ServoArm             // The actuation arm connected to ServoMotor.ServoWheel
+     }
+    """
+
+    prefabParameters = [
+        {
+            "name": "rotation",
+            "type": "Vec3d",
+            "help": "Rotation",
+            "default": [0.0, 0.0, 0.0],
+        },
+        {
+            "name": "translation",
+            "type": "Vec3d",
+            "help": "Translation",
+            "default": [0.0, 0.0, 0.0],
+        },
+        {
+            "name": "scale",
+            "type": "Vec3d",
+            "help": "Scale 3d",
+            "default": [1.0e-3, 1.0e-3, 1.0e-3],
+        },
+    ]
+
+    prefabData = [
+        {
+            "name": "angleIn",
+            "group": "ArmProperties",
+            "help": "angle of rotation (in radians) of the arm",
+            "type": "float",
+            "default": 0,
+        },
+        {
+            "name": "angleOut",
+            "group": "ArmProperties",
+            "type": "float",
+            "help": "angle of rotation (in radians) of " "the arm",
+            "default": 0,
+        },
+    ]
+
+    def __init__(self, *args, **kwargs):
+        Sofa.Prefab.__init__(self, *args, **kwargs)
+
+    def init(self):
+        self.servomotor = self.addChild(
+            ServoMotor(
+                name="ServoMotor",
+                translation=self.translation.value,
+                rotation=self.rotation.value,
+            )
+        )
+        self.servoarm = self.servomotor.Articulation.ServoWheel.addChild(
+            ServoArm(name="ServoArm")
+        )
+        self.servoarm.setRigidMapping(
+            self.ServoMotor.Articulation.ServoWheel.dofs.getLinkPath()
+        )
 
         # add a public attribute and connect it to the private one.
         self.ServoMotor.angleIn.setParent(self.angleIn)
@@ -190,9 +319,7 @@ class ActuatedWheel(Sofa.Prefab):
         self.angleOut.setParent(self.ServoMotor.angleOut)
 
 
-
 class WheelController(Sofa.Core.Controller):
-
     def __init__(self, *args, **kwargs):
         # These are needed (and the normal way to override from a python class)
         Sofa.Core.Controller.__init__(self, *args, **kwargs)
@@ -206,19 +333,22 @@ class WheelController(Sofa.Core.Controller):
         self.node.getRoot().GenericConstraintSolver.computeConstraintForces.value = True
 
     def onKeypressedEvent(self, event):
-        key = event['key']
+        key = event["key"]
         if key == Key.P:
             print("Number of contact points: " + str(self.numContact))
             print("Norm of the contact force: " + str(self.forceContact))
 
     def onAnimateBeginEvent(self, eventType):
-
         # Update of the servomotor angular displacement
         angularStep = 0.02
-        self.actuator.ServoMotor.angleIn = self.actuator.ServoMotor.angleIn.value + angularStep
+        self.actuator.ServoMotor.angleIn = (
+            self.actuator.ServoMotor.angleIn.value + angularStep
+        )
 
         # Computation of the contact force applied on the object to grasp
-        contactForces = self.node.getRoot().GenericConstraintSolver.constraintForces.value
+        contactForces = (
+            self.node.getRoot().GenericConstraintSolver.constraintForces.value
+        )
 
         # print the number of nodes in contact and the norm of the largest contact force
         self.numContact = 0
@@ -230,13 +360,20 @@ class WheelController(Sofa.Core.Controller):
         self.forceContact /= self.node.dt.value
 
 
-
-
 class NoodleRobot(Sofa.Prefab):
     prefabParameters = [
-        {"name": "rotation", "type": "Vec3d", "help": "Rotation in base frame", "default": [0.0, 0.0, 0.0]},
-        {"name": "translation", "type": "Vec3d", "help": "Translation in base frame",
-         "default": [0.0, 0.0, 0.0]}
+        {
+            "name": "rotation",
+            "type": "Vec3d",
+            "help": "Rotation in base frame",
+            "default": [0.0, 0.0, 0.0],
+        },
+        {
+            "name": "translation",
+            "type": "Vec3d",
+            "help": "Translation in base frame",
+            "default": [0.0, 0.0, 0.0],
+        },
     ]
 
     def __init__(self, *args, **kwargs):
@@ -248,19 +385,25 @@ class NoodleRobot(Sofa.Prefab):
         self.elasticMaterial = self.elasticBody()
         self.ElasticBody.init()
 
-
         # Load a servo motor
-        wheel = self.addChild(ActuatedWheel(name="ActuatedWheel", rotation=[90.0, 90, 0.0], translation=[0, 140, 0]))
-        wheel.ServoMotor.Articulation.dofs.position.value = [[wheel.angleIn.value]]  # Initialize the angle
-
+        wheel = self.addChild(
+            ActuatedWheel(
+                name="ActuatedWheel", rotation=[90.0, 90, 0.0], translation=[0, 140, 0]
+            )
+        )
+        wheel.ServoMotor.Articulation.dofs.position.value = [
+            [wheel.angleIn.value]
+        ]  # Initialize the angle
 
         # Define a region of interest to rigidify the nodes of the finger mesh clamped in the servo arm
-        box = addOrientedBoxRoi(self,
-                                name="boxROIclamped",
-                                position=[list(i) for i in self.elasticMaterial.dofs.rest_position.value],
-                                translation=[0.0, 290.0, 0.0],
-                                eulerRotation=[0.0, 0.0, 0.0],
-                                scale=[150, 120, 250])
+        box = addOrientedBoxRoi(
+            self,
+            name="boxROIclamped",
+            position=[list(i) for i in self.elasticMaterial.dofs.rest_position.value],
+            translation=[0.0, 290.0, 0.0],
+            eulerRotation=[0.0, 0.0, 0.0],
+            scale=[150, 120, 250],
+        )
         box.drawBoxes = True
         box.init()
 
@@ -268,105 +411,126 @@ class NoodleRobot(Sofa.Prefab):
         indices = [[ind for ind in box.indices.value]]
         frame = [[0, 0, 0, 0, 0, 0, 1]]
 
-
         # Rigidify the finger nodes in the ROI. Create a Rigidified object and set up a spring force
         # field to constrain the nodes to stay in the rest shape
-        rigidifiedStruct = Rigidify(self, self.elasticMaterial, groupIndices=indices, frames=frame,
-                                    name="RigidifiedStructure")
-
+        rigidifiedStruct = Rigidify(
+            self,
+            self.elasticMaterial,
+            groupIndices=indices,
+            frames=frame,
+            name="RigidifiedStructure",
+        )
 
         servoArm = wheel.ServoMotor.Articulation.ServoWheel.ServoArm
         servoArm.addChild(rigidifiedStruct.RigidParts)
-        servoArm.RigidParts.addObject('RigidRigidMapping', index=0, input=servoArm.dofs.getLinkPath())
-
+        servoArm.RigidParts.addObject(
+            "RigidRigidMapping", index=0, input=servoArm.dofs.getLinkPath()
+        )
 
         self.addCollision()
 
-
     def elasticBody(self):
         body = self.addChild("ElasticBody")
-        e = body.addChild(ElasticMaterialObject(
-                                        volumeMeshFileName="mesh/Body8_lowres_mm_gmsh.msh",
-                                        poissonRatio=0.3,
-                                        youngModulus=1800,
-                                        totalMass=1.5,
-                                        surfaceColor=[0.4, 1.0, 0.7, 1.0],
-                                        surfaceMeshFileName="mesh/Body8_lowres_mm_2.obj",
-                                        translation=[0.0, 500.0, 0.0], 
-                                        rotation=[0.0, 0.0, 0.0]))
+        e = body.addChild(
+            ElasticMaterialObject(
+                volumeMeshFileName="mesh/Body8_lowres_mm_gmsh.msh",
+                poissonRatio=0.3,
+                youngModulus=1800,
+                totalMass=1.5,
+                surfaceColor=[0.4, 1.0, 0.7, 1.0],
+                surfaceMeshFileName="mesh/Body8_lowres_mm_2.obj",
+                translation=[0.0, 500.0, 0.0],
+                rotation=[0.0, 0.0, 0.0],
+            )
+        )
         return e
 
-
     def addCollision(self):
-        CollisionMesh(self.elasticMaterial, name='SelfCollisionMesh1',
-                                   surfaceMeshFileName="mesh/body8_lowres_mm_gmsh.stl",
-                                   rotation=[0.0, 0.0, 0.0], translation=[0.0, 500.0, 0.0])
-
-
+        CollisionMesh(
+            self.elasticMaterial,
+            name="SelfCollisionMesh1",
+            surfaceMeshFileName="mesh/body8_lowres_mm_gmsh.stl",
+            rotation=[0.0, 0.0, 0.0],
+            translation=[0.0, 500.0, 0.0],
+        )
 
 
 def createScene(rootNode):
     """This is my first scene"""
 
-    pluginList = ["Sofa.Component.AnimationLoop",
-                  "Sofa.Component.Collision.Detection.Algorithm",
-                  "Sofa.Component.Collision.Detection.Intersection",
-                  "Sofa.Component.Collision.Geometry",
-                  "Sofa.Component.Collision.Response.Contact",
-                  "Sofa.Component.Constraint.Lagrangian.Correction",
-                  "Sofa.Component.Constraint.Lagrangian.Solver",
-                  "Sofa.Component.LinearSolver.Direct",
-                  "Sofa.Component.Mapping.Linear",
-                  "Sofa.Component.Mass",
-                  "Sofa.Component.SolidMechanics.FEM.Elastic",
-                  "Sofa.Component.StateContainer",
-                  "Sofa.Component.Topology.Container.Constant",
-                  "Sofa.Component.Topology.Container.Dynamic",
-                  "Sofa.Component.Topology.Container.Grid",
-                  "Sofa.Component.Visual",
-                  "Sofa.Component.Mapping.NonLinear",
-                  "Sofa.GUI.Component",
-                  "Sofa.Component.Engine.Select",
-                  "ArticulatedSystemPlugin",
-                  "Sofa.Component.Constraint.Projective",
-                  "Sofa.Component.SolidMechanics.Spring",
-                  "Sofa.Component.LinearSolver.Iterative"]
+    pluginList = [
+        "Sofa.Component.AnimationLoop",
+        "Sofa.Component.Collision.Detection.Algorithm",
+        "Sofa.Component.Collision.Detection.Intersection",
+        "Sofa.Component.Collision.Geometry",
+        "Sofa.Component.Collision.Response.Contact",
+        "Sofa.Component.Constraint.Lagrangian.Correction",
+        "Sofa.Component.Constraint.Lagrangian.Solver",
+        "Sofa.Component.LinearSolver.Direct",
+        "Sofa.Component.Mapping.Linear",
+        "Sofa.Component.Mass",
+        "Sofa.Component.SolidMechanics.FEM.Elastic",
+        "Sofa.Component.StateContainer",
+        "Sofa.Component.Topology.Container.Constant",
+        "Sofa.Component.Topology.Container.Dynamic",
+        "Sofa.Component.Topology.Container.Grid",
+        "Sofa.Component.Visual",
+        "Sofa.Component.Mapping.NonLinear",
+        "Sofa.GUI.Component",
+        "Sofa.Component.Engine.Select",
+        "ArticulatedSystemPlugin",
+        "Sofa.Component.Constraint.Projective",
+        "Sofa.Component.SolidMechanics.Spring",
+        "Sofa.Component.LinearSolver.Iterative",
+    ]
 
-
-
-    scene = Scene(rootNode, dt=0.005, gravity=[0.0, -9810.0, 0.0], iterative=False, plugins=pluginList)
+    scene = Scene(
+        rootNode,
+        dt=0.005,
+        gravity=[0.0, -9810.0, 0.0],
+        iterative=False,
+        plugins=pluginList,
+    )
     scene.addMainHeader()
 
-    scene.addObject('CollisionPipeline', name="DefaultPipeline") # To surpress warning from contactheader.py
+    scene.addObject(
+        "CollisionPipeline", name="DefaultPipeline"
+    )  # To surpress warning from contactheader.py
     scene.addContact(alarmDistance=50, contactDistance=10, frictionCoef=0.8)
 
-    scene.Simulation.addObject('GenericConstraintCorrection')
-
+    scene.Simulation.addObject("GenericConstraintCorrection")
 
     noodleRobot = NoodleRobot()
     scene.Modelling.addChild(noodleRobot)
 
-    
     # Add the simulated elements to the Simulation node
     scene.Simulation.addChild(noodleRobot.RigidifiedStructure.DeformableParts)
     scene.Simulation.addChild(noodleRobot.ActuatedWheel)
 
-
     # Add a controller to output some performance metric during the simulation
-    scene.addObject(WheelController(name='WheelController',
-                                     actuator=scene.Modelling.NoodleRobot.ActuatedWheel, node=rootNode))
+    scene.addObject(
+        WheelController(
+            name="WheelController",
+            actuator=scene.Modelling.NoodleRobot.ActuatedWheel,
+            node=rootNode,
+        )
+    )
 
+    scene.Simulation.addObject(
+        "MechanicalMatrixMapper",
+        name="deformableAndFreeCenterCoupling",
+        template="Vec1,Vec3",
+        object1=noodleRobot.ActuatedWheel.ServoMotor.Articulation.dofs.getLinkPath(),
+        object2=noodleRobot.RigidifiedStructure.DeformableParts.dofs.getLinkPath(),
+        nodeToParse=noodleRobot.RigidifiedStructure.DeformableParts.ElasticMaterialObject.getLinkPath(),
+    )
 
-    scene.Simulation.addObject('MechanicalMatrixMapper',
-                               name="deformableAndFreeCenterCoupling",
-                               template='Vec1,Vec3',
-                               object1=noodleRobot.ActuatedWheel.ServoMotor.Articulation.dofs.getLinkPath(),
-                               object2=noodleRobot.RigidifiedStructure.DeformableParts.dofs.getLinkPath(),
-                               nodeToParse=noodleRobot.RigidifiedStructure.DeformableParts.ElasticMaterialObject.getLinkPath())
-
-
-
-
-    Floor(scene.Modelling, translation=[0.0, -600.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=75.0, isAStaticObject=True)
+    Floor(
+        scene.Modelling,
+        translation=[0.0, -600.0, 0.0],
+        rotation=[15.0, 0.0, 0.0],
+        uniformScale=75.0,
+        isAStaticObject=True,
+    )
 
     return rootNode
