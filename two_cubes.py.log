@@ -261,3 +261,13 @@
 /Simulation/CubeBot/Red/Articulation/RestShapeSpringsForceField.springColor = 0 1 0 1
 /Simulation/CubeBot/Red/Articulation/dofs.showColor = 1 1 1 1
 /Simulation/CubeBot/Red/mstate.showColor = 1 1 1 1
+
+--- NEW SESSION: 20/04/2023 15:35:18 ---
+//InteractiveCamera.zFar = 1005.49
+//InteractiveCamera.fieldOfView = 65
+
+--- NEW SESSION: 20/04/2023 15:57:04 ---
+/Modelling/NoodleRobot/RigidifiedStructure/RigidParts/dofs.showColor = 1 1 1 1
+
+--- NEW SESSION: 20/04/2023 15:58:46 ---
+/Modelling/NoodleRobot/RigidifiedStructure/RigidParts/RigidifiedParticules/dofs.showColor = 1 1 1 1

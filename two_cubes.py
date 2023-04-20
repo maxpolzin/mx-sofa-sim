@@ -116,14 +116,39 @@ class NoodleRobot(Sofa.Prefab):
         self.elasticMaterial = self.elasticBody()
         self.ElasticBody.init()
 
+        cubeBot = CubeBot()
+        self.addChild(cubeBot)
+
+        box = addOrientedBoxRoi(
+            self,
+            name="boxROIclamped",
+            position=[list(i) for i in self.elasticMaterial.dofs.rest_position.value],
+            translation=[10.0, 3.0, 0.0],
+            eulerRotation=[0.0, 0.0, 0.0],
+            scale=[1.5, 1.2, 2.5],
+        )
+        box.drawBoxes = True
+        box.init()
+
+        indices = [[ind for ind in box.indices.value]]
+        frame = [[0, 0, 0, 0, 0, 0, 1]]
+
+        rigidifiedStruct = Rigidify(
+            self,
+            self.elasticMaterial,
+            groupIndices=indices,
+            frames=frame,
+            name="RigidifiedStructure",
+        )
+
     def elasticBody(self):
         body = self.addChild("ElasticBody")
         e = body.addChild(
             ElasticMaterialObject(
                 volumeMeshFileName="mesh/Body8_lowres_mm_gmsh.msh",
                 poissonRatio=0.3,
-                youngModulus=1800,
-                totalMass=1.5,
+                youngModulus=100800,
+                totalMass=50.5,
                 surfaceColor=[0.4, 1.0, 0.7, 1.0],
                 surfaceMeshFileName="mesh/Body8_lowres_mm_2.obj",
                 translation=[10.0, 5.0, 0.0],
@@ -167,11 +192,13 @@ def createScene(rootNode):
         "Sofa.Component.LinearSolver.Iterative",
     ]
 
+
+
     scene = Scene(
         rootNode,
         dt=0.01,
         gravity=[0.0, -9.81, 0.0],
-        iterative=False,
+        iterative=True,
         plugins=pluginList,
     )
     scene.addMainHeader()
@@ -179,19 +206,19 @@ def createScene(rootNode):
     scene.addObject(
         "CollisionPipeline", name="DefaultPipeline"
     )  # To surpress warning from contactheader.py
-    scene.addContact(alarmDistance=0.5, contactDistance=0.02, frictionCoef=0.1)
+    scene.addContact(alarmDistance=0.3, contactDistance=0.01, frictionCoef=0.1)
 
-    scene.Simulation.addObject("GenericConstraintCorrection")
-
-    cubeBot = CubeBot()
-    scene.Simulation.addChild(cubeBot)
 
     noodleRobot = NoodleRobot()
     scene.Modelling.addChild(noodleRobot)
 
+    scene.Simulation.addChild(noodleRobot.CubeBot)
+    noodleRobot.CubeBot.Red.addObject('UncoupledConstraintCorrection')
+    noodleRobot.CubeBot.Red.Articulation.addObject('UncoupledConstraintCorrection')
 
-
-
+    scene.Simulation.addChild(noodleRobot.RigidifiedStructure)
+    noodleRobot.RigidifiedStructure.DeformableParts.addObject('UncoupledConstraintCorrection')
+    noodleRobot.RigidifiedStructure.RigidParts.addObject('UncoupledConstraintCorrection')
 
 
     # Floor(scene.Modelling, translation=[0.0, -3.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=0.4, isAStaticObject=True)
