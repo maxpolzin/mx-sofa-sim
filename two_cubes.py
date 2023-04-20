@@ -3,6 +3,10 @@ import Sofa
 from stlib3.scene import Scene
 from stlib3.physics.rigid import Cube, Floor
 
+from stlib3.physics.deformable import ElasticMaterialObject
+from stlib3.physics.collision import CollisionMesh
+from stlib3.components import addOrientedBoxRoi
+from stlib3.physics.mixedmaterial import Rigidify
 
 class CubeController(Sofa.Core.Controller):
     def __init__(self, *a, **kw):
@@ -35,13 +39,18 @@ class CubeBot(Sofa.Prefab):
     def __init__(self, *args, **kwargs):
         Sofa.Prefab.__init__(self, *args, **kwargs)
 
+
+   
+
     def init(self):
+
+
         cube_red = Cube(
             self,
             totalMass=50,
             name="Red",
             color=[1.0, 0.0, 0.0, 1.0],
-            translation=[1.25, 15.0, 0.0],
+            translation=[1.25, 5.0, 0.0],
             rotation=[0.0, 90.0, 0.0],
             uniformScale=1.0,
             isAStaticObject=False,
@@ -95,6 +104,40 @@ class CubeBot(Sofa.Prefab):
         )
 
 
+
+
+class NoodleRobot(Sofa.Prefab):
+
+    def __init__(self, *args, **kwargs):
+        Sofa.Prefab.__init__(self, *args, **kwargs)
+
+
+    def init(self):
+        self.elasticMaterial = self.elasticBody()
+        self.ElasticBody.init()
+
+    def elasticBody(self):
+        body = self.addChild("ElasticBody")
+        e = body.addChild(
+            ElasticMaterialObject(
+                volumeMeshFileName="mesh/Body8_lowres_mm_gmsh.msh",
+                poissonRatio=0.3,
+                youngModulus=1800,
+                totalMass=1.5,
+                surfaceColor=[0.4, 1.0, 0.7, 1.0],
+                surfaceMeshFileName="mesh/Body8_lowres_mm_2.obj",
+                translation=[10.0, 5.0, 0.0],
+                rotation=[0.0, 0.0, 0.0],
+                scale=[0.01,0.01,0.01],
+                collisionMesh="mesh/body8_lowres_mm_gmsh.stl",
+            )
+        )
+        return e
+
+
+
+
+
 def createScene(rootNode):
     """This is my first scene"""
 
@@ -142,6 +185,14 @@ def createScene(rootNode):
 
     cubeBot = CubeBot()
     scene.Simulation.addChild(cubeBot)
+
+    noodleRobot = NoodleRobot()
+    scene.Modelling.addChild(noodleRobot)
+
+
+
+
+
 
     # Floor(scene.Modelling, translation=[0.0, -3.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=0.4, isAStaticObject=True)
     Floor(
