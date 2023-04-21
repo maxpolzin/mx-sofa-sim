@@ -50,8 +50,8 @@ class CubeBot(Sofa.Prefab):
             totalMass=50,
             name="Red",
             color=[1.0, 0.0, 0.0, 1.0],
-            translation=[1.25, 5.0, 0.0],
-            rotation=[0.0, 90.0, 0.0],
+            translation=[10.25, 3.0, 0.0],
+            rotation=[0.0, 90.0, -90.0],
             uniformScale=1.0,
             isAStaticObject=False,
         )
@@ -141,12 +141,19 @@ class NoodleRobot(Sofa.Prefab):
             name="RigidifiedStructure",
         )
 
+        self.RigidifiedStructure.RigidParts.addObject(
+            "RigidRigidMapping", index=0, input=self.CubeBot.Red.mstate.getLinkPath()
+        )
+
+
+
+
     def elasticBody(self):
         body = self.addChild("ElasticBody")
         e = body.addChild(
             ElasticMaterialObject(
                 volumeMeshFileName="mesh/Body8_lowres_mm_gmsh.msh",
-                poissonRatio=0.3,
+                poissonRatio=0.1,
                 youngModulus=100800,
                 totalMass=50.5,
                 surfaceColor=[0.4, 1.0, 0.7, 1.0],
@@ -210,24 +217,16 @@ def createScene(rootNode):
 
 
     noodleRobot = NoodleRobot()
-    scene.Modelling.addChild(noodleRobot)
+    scene.Simulation.addChild(noodleRobot)
 
-    scene.Simulation.addChild(noodleRobot.CubeBot)
     noodleRobot.CubeBot.Red.addObject('UncoupledConstraintCorrection')
     noodleRobot.CubeBot.Red.Articulation.addObject('UncoupledConstraintCorrection')
 
-    scene.Simulation.addChild(noodleRobot.RigidifiedStructure)
     noodleRobot.RigidifiedStructure.DeformableParts.addObject('UncoupledConstraintCorrection')
     noodleRobot.RigidifiedStructure.RigidParts.addObject('UncoupledConstraintCorrection')
+    noodleRobot.RigidifiedStructure.RigidParts.RigidifiedParticules.addObject('UncoupledConstraintCorrection')
 
 
-    # Floor(scene.Modelling, translation=[0.0, -3.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=0.4, isAStaticObject=True)
-    Floor(
-        scene.Modelling,
-        translation=[0.0, -3.0, 0.0],
-        rotation=[0.0, 0.0, 0.0],
-        uniformScale=0.4,
-        isAStaticObject=True,
-    )
+    Floor(scene.Modelling, translation=[0.0, -3.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=0.4, isAStaticObject=True)
 
     return rootNode
