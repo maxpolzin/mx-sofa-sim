@@ -152,16 +152,16 @@ class NoodleRobot(Sofa.Prefab):
         body = self.addChild("ElasticBody")
         e = body.addChild(
             ElasticMaterialObject(
-                volumeMeshFileName="mesh/Body8_lowres_mm_gmsh.msh",
+                volumeMeshFileName="mesh/100_body.msh",
                 poissonRatio=0.3,
                 youngModulus=100800,
                 totalMass=50.5,
                 surfaceColor=[0.4, 1.0, 0.7, 1.0],
-                surfaceMeshFileName="mesh/Body8_lowres_mm_2.obj",
+                surfaceMeshFileName="mesh/3500_body.stl",
                 translation=[10.0, 5.0, 0.0],
                 rotation=[0.0, 0.0, 0.0],
                 scale=[0.01,0.01,0.01],
-                collisionMesh="mesh/body8_lowres_mm_gmsh.stl",
+                collisionMesh="mesh/300_body.stl",
             )
         )
         return e
@@ -199,6 +199,8 @@ def createScene(rootNode):
         "Sofa.Component.LinearSolver.Iterative",
     ]
 
+
+    # Mesh generation from Fusion360: https://www.sofa-framework.org/community/forum/topic/easiest-way-from-stl-to-vtk/
 
 
     scene = Scene(
