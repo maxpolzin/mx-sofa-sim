@@ -153,7 +153,7 @@ class NoodleRobot(Sofa.Prefab):
         e = body.addChild(
             ElasticMaterialObject(
                 volumeMeshFileName="mesh/Body8_lowres_mm_gmsh.msh",
-                poissonRatio=0.1,
+                poissonRatio=0.3,
                 youngModulus=100800,
                 totalMass=50.5,
                 surfaceColor=[0.4, 1.0, 0.7, 1.0],
