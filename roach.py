@@ -52,7 +52,7 @@ class CubeBot(Sofa.Prefab):
             color=[1.0, 0.0, 0.0, 1.0],
             translation=[10.25, 3.0, 0.0],
             rotation=[90.0, 0.0, -90.0],
-            uniformScale=1.0,
+            uniformScale=0.5,
             isAStaticObject=False,
         )
         cube_red.addObject('UncoupledConstraintCorrection')
@@ -124,12 +124,18 @@ class NoodleRobot(Sofa.Prefab):
             self,
             name="boxROIclamped",
             position=[list(i) for i in self.elasticMaterial.dofs.rest_position.value],
-            translation=[10.0, 3.0, 0.0],
+            translation=[10.25, 3.0, 0.0],
             eulerRotation=[0.0, 0.0, 0.0],
-            scale=[2.5, 1.2, 2.5],
+            scale=[0.9, 1.1, 1.1],
         )
         box.drawBoxes = True
         box.init()
+
+
+            # translation=[10.25, 3.0, 0.0],
+            # rotation=[90.0, 0.0, -90.0],
+            # uniformScale=0.5,
+        
 
         indices = [[ind for ind in box.indices.value]]
         frame = [[0, 0, 0, 0, 0, 0, 1]]
