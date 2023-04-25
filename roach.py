@@ -51,7 +51,7 @@ class CubeBot(Sofa.Prefab):
             name="Red",
             color=[1.0, 0.0, 0.0, 1.0],
             translation=[10.25, 3.0, 0.0],
-            rotation=[0.0, 90.0, -90.0],
+            rotation=[90.0, 0.0, -90.0],
             uniformScale=1.0,
             isAStaticObject=False,
         )
@@ -163,7 +163,7 @@ class NoodleRobot(Sofa.Prefab):
                 translation=[16.5, 3.0, 0.0],
                 rotation=[0.0, 0.0, 0.0],
                 scale=[0.01,0.01,0.01],
-                collisionMesh="mesh/roach/2400_torus.obj",
+                collisionMesh="mesh/roach/300_torus.stl",
             )
         )
         return e
@@ -207,7 +207,7 @@ def createScene(rootNode):
 
     scene = Scene(
         rootNode,
-        dt=0.001,
+        dt=0.01,
         gravity=[0.0, -9.81, 0.0],
         iterative=True,
         plugins=pluginList,
