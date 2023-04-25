@@ -114,7 +114,7 @@ class NoodleRobot(Sofa.Prefab):
         Sofa.Prefab.__init__(self, *args, **kwargs)
 
     def init(self):
-        self.elasticMaterial = self.elasticBody(translation=[19.5, 3.0, 0.0])
+        self.elasticMaterial = self.elasticBody(name="ElasticBody", translation=[19.5, 3.0, 0.0])
         self.ElasticBody.init()
 
         cubeBot = CubeBot()
@@ -134,20 +134,59 @@ class NoodleRobot(Sofa.Prefab):
         indices = [[ind for ind in box.indices.value]]
         frame = [[0, 0, 0, 0, 0, 0, 1]]
 
-        rigidifiedStruct = Rigidify(
+        rigidifiedBody = Rigidify(
             self,
             self.elasticMaterial,
             groupIndices=indices,
             frames=frame,
-            name="RigidifiedStructure",
+            name="RigidifiedBody",
         )
 
-        rigidifiedStruct.DeformableParts.addObject('UncoupledConstraintCorrection')
-        rigidifiedStruct.RigidParts.RigidifiedParticules.addObject('UncoupledConstraintCorrection')
+        rigidifiedBody.DeformableParts.addObject('UncoupledConstraintCorrection')
+        rigidifiedBody.RigidParts.RigidifiedParticules.addObject('UncoupledConstraintCorrection')
 
-        rigidifiedStruct.RigidParts.addObject(
+        rigidifiedBody.RigidParts.addObject(
             "RigidRigidMapping", index=0, input=self.CubeBot.Red.mstate.getLinkPath()
         )
+
+
+
+
+        # self.elasticWheel = self.elasticBody(name="ElasticWheel",
+        #                                      translation=[-3, 3.0, 2.2],
+        #                                      rotation=[0.0, 245.0, 0.0],
+        #                                      volumeMeshFileName="mesh/roach/60_wheel.msh",
+        #                                      surfaceMeshFileName="mesh/roach/400_wheel.obj",
+        #                                      collisionMesh="mesh/roach/60_wheel.stl"
+        #                                      )
+        # self.ElasticWheel.init()
+
+
+
+        # wheel_box = addOrientedBoxRoi(
+        #     self,
+        #     name="wheelBoxROIclamped",
+        #     position=[list(i) for i in self.elasticMaterial.dofs.rest_position.value],
+        #     translation=[10.25, 3.0, 0.0],
+        #     eulerRotation=[0.0, 0.0, 0.0],
+        #     scale=[0.9, 1.1, 1.1],
+        # )
+        # wheel_box.drawBoxes = True
+        # wheel_box.init()
+
+        # indices = [[ind for ind in wheel_box.indices.value]]
+        # frame = [[0, 0, 0, 0, 0, 0, 1]]
+
+        # rigidifiedStruct = Rigidify(
+        #     self,
+        #     self.elasticMaterial,
+        #     groupIndices=indices,
+        #     frames=frame,
+        #     name="RigidifiedWheel",
+        # )
+
+        # rigidifiedStruct.DeformableParts.addObject('UncoupledConstraintCorrection')
+        # rigidifiedStruct.RigidParts.RigidifiedParticules.addObject('UncoupledConstraintCorrection')
 
 
 
@@ -156,12 +195,14 @@ class NoodleRobot(Sofa.Prefab):
 
 
     def elasticBody(self, 
+                    name="ElasticBody",
                     translation=[0.0, 0.0, 0.0], 
                     rotation=[0.0, 0.0, 0.0],
                     volumeMeshFileName="mesh/roach/300_torus.msh",
                     surfaceMeshFileName="mesh/roach/2400_torus.obj",
                     collisionMesh="mesh/roach/300_torus.stl"):
-        body = self.addChild("ElasticBody")
+        
+        body = self.addChild(name)
         e = body.addChild(
             ElasticMaterialObject(
                 volumeMeshFileName=volumeMeshFileName,
