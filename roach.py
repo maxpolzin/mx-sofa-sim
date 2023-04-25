@@ -225,7 +225,6 @@ def createScene(rootNode):
     noodleRobot.CubeBot.Red.Articulation.addObject('UncoupledConstraintCorrection')
 
     noodleRobot.RigidifiedStructure.DeformableParts.addObject('UncoupledConstraintCorrection')
-    noodleRobot.RigidifiedStructure.RigidParts.addObject('UncoupledConstraintCorrection')
     noodleRobot.RigidifiedStructure.RigidParts.RigidifiedParticules.addObject('UncoupledConstraintCorrection')
 
 
