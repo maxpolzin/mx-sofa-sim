@@ -72,7 +72,7 @@ class CubeBot(Sofa.Prefab):
         articulationCenter = angle.addChild("ArticulationCenter")
         articulationCenter.addObject(
             "ArticulationCenter",
-            posOnParent=[0, 0.0, 1.95],
+            posOnParent=[0, 0.0, 0.95],
             parentIndex=0,
             childIndex=0,
             posOnChild=[0.0, 0.0, 0.0],
@@ -94,7 +94,7 @@ class CubeBot(Sofa.Prefab):
             name="Blue",
             totalMass=50,
             color=[0.0, 0.0, 1.0, 1.0],
-            uniformScale=0.9,
+            uniformScale=0.5,
             isAStaticObject=False,
         )
 
@@ -130,12 +130,6 @@ class NoodleRobot(Sofa.Prefab):
         )
         box.drawBoxes = True
         box.init()
-
-
-            # translation=[10.25, 3.0, 0.0],
-            # rotation=[90.0, 0.0, -90.0],
-            # uniformScale=0.5,
-        
 
         indices = [[ind for ind in box.indices.value]]
         frame = [[0, 0, 0, 0, 0, 0, 1]]
