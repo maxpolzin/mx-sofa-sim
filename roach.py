@@ -126,7 +126,7 @@ class NoodleRobot(Sofa.Prefab):
             position=[list(i) for i in self.elasticMaterial.dofs.rest_position.value],
             translation=[10.0, 3.0, 0.0],
             eulerRotation=[0.0, 0.0, 0.0],
-            scale=[1.5, 1.2, 2.5],
+            scale=[2.5, 1.2, 2.5],
         )
         box.drawBoxes = True
         box.init()
@@ -150,22 +150,20 @@ class NoodleRobot(Sofa.Prefab):
         )
 
 
-
-
     def elasticBody(self):
         body = self.addChild("ElasticBody")
         e = body.addChild(
             ElasticMaterialObject(
-                volumeMeshFileName="mesh/100_body.msh",
+                volumeMeshFileName="mesh/roach/300_torus.msh",
                 poissonRatio=0.3,
                 youngModulus=10080000,
                 totalMass=50.5,
                 surfaceColor=[0.4, 1.0, 0.7, 1.0],
-                surfaceMeshFileName="mesh/3500_body.stl",
-                translation=[10.0, 5.0, 0.0],
+                surfaceMeshFileName="mesh/roach/2400_torus.obj",
+                translation=[16.5, 3.0, 0.0],
                 rotation=[0.0, 0.0, 0.0],
                 scale=[0.01,0.01,0.01],
-                collisionMesh="mesh/300_body.stl",
+                collisionMesh="mesh/roach/2400_torus.obj",
             )
         )
         return e
