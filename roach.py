@@ -114,7 +114,7 @@ class NoodleRobot(Sofa.Prefab):
         Sofa.Prefab.__init__(self, *args, **kwargs)
 
     def init(self):
-        self.elasticMaterial = self.elasticBody()
+        self.elasticMaterial = self.elasticBody(translation=[19.5, 3.0, 0.0])
         self.ElasticBody.init()
 
         cubeBot = CubeBot()
@@ -150,20 +150,30 @@ class NoodleRobot(Sofa.Prefab):
         )
 
 
-    def elasticBody(self):
+
+
+
+
+
+    def elasticBody(self, 
+                    translation=[0.0, 0.0, 0.0], 
+                    rotation=[0.0, 0.0, 0.0],
+                    volumeMeshFileName="mesh/roach/300_torus.msh",
+                    surfaceMeshFileName="mesh/roach/2400_torus.obj",
+                    collisionMesh="mesh/roach/300_torus.stl"):
         body = self.addChild("ElasticBody")
         e = body.addChild(
             ElasticMaterialObject(
-                volumeMeshFileName="mesh/roach/300_torus.msh",
+                volumeMeshFileName=volumeMeshFileName,
                 poissonRatio=0.3,
                 youngModulus=10080000,
                 totalMass=50.5,
                 surfaceColor=[0.4, 1.0, 0.7, 1.0],
-                surfaceMeshFileName="mesh/roach/2400_torus.obj",
-                translation=[19.5, 3.0, 0.0],
-                rotation=[0.0, 0.0, 0.0],
+                surfaceMeshFileName=surfaceMeshFileName,
+                translation=translation,
+                rotation=rotation,
                 scale=[0.015,0.015,0.015],
-                collisionMesh="mesh/roach/300_torus.stl",
+                collisionMesh=collisionMesh
             )
         )
         return e
