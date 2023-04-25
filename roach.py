@@ -47,7 +47,7 @@ class CubeBot(Sofa.Prefab):
 
         cube_red = Cube(
             self,
-            totalMass=50,
+            totalMass=500,
             name="Red",
             color=[1.0, 0.0, 0.0, 1.0],
             translation=[10.25, 3.0, 0.0],
@@ -92,7 +92,7 @@ class CubeBot(Sofa.Prefab):
         cube_blue = Cube(
             angle,
             name="Blue",
-            totalMass=50,
+            totalMass=500,
             color=[0.0, 0.0, 1.0, 1.0],
             uniformScale=0.5,
             isAStaticObject=False,
@@ -114,8 +114,9 @@ class NoodleRobot(Sofa.Prefab):
         Sofa.Prefab.__init__(self, *args, **kwargs)
 
     def init(self):
-        self.elasticMaterial = self.elasticBody(name="ElasticBody", translation=[19.5, 3.0, 0.0])
-        self.ElasticBody.init()
+        self.elasticTorus = self.elasticBody(name="ElasticTorus", 
+                                             translation=[19.5, 3.0, 0.0])
+        self.ElasticTorus.init()
 
         cubeBot = CubeBot()
         self.addChild(cubeBot)
@@ -123,7 +124,7 @@ class NoodleRobot(Sofa.Prefab):
         box = addOrientedBoxRoi(
             self,
             name="boxROIclamped",
-            position=[list(i) for i in self.elasticMaterial.dofs.rest_position.value],
+            position=[list(i) for i in self.elasticTorus.dofs.rest_position.value],
             translation=[10.25, 3.0, 0.0],
             eulerRotation=[0.0, 0.0, 0.0],
             scale=[0.9, 1.1, 1.1],
@@ -136,7 +137,7 @@ class NoodleRobot(Sofa.Prefab):
 
         rigidifiedBody = Rigidify(
             self,
-            self.elasticMaterial,
+            self.elasticTorus,
             groupIndices=indices,
             frames=frame,
             name="RigidifiedBody",
@@ -152,43 +153,46 @@ class NoodleRobot(Sofa.Prefab):
 
 
 
-        # self.elasticWheel = self.elasticBody(name="ElasticWheel",
-        #                                      translation=[-3, 3.0, 2.2],
-        #                                      rotation=[0.0, 245.0, 0.0],
-        #                                      volumeMeshFileName="mesh/roach/60_wheel.msh",
-        #                                      surfaceMeshFileName="mesh/roach/400_wheel.obj",
-        #                                      collisionMesh="mesh/roach/60_wheel.stl"
-        #                                      )
-        # self.ElasticWheel.init()
+        self.elasticWheel = self.elasticBody(name="ElasticWheel",
+                                             translation=[3, 3.0, 2.2],
+                                             rotation=[0.0, 245.0, 0.0],
+                                             volumeMeshFileName="mesh/roach/60_wheel.msh",
+                                             surfaceMeshFileName="mesh/roach/400_wheel.obj",
+                                             collisionMesh="mesh/roach/60_wheel.stl",
+                                             totalMass=500
+                                             )
+        self.ElasticWheel.init()
 
 
+        wheel_box = addOrientedBoxRoi(
+            self,
+            name="wheelBoxROIclamped",
+            position=[list(i) for i in self.elasticWheel.dofs.rest_position.value],
+            translation=[8.5, 3.0, 0.0],
+            eulerRotation=[0.0, 0.0, 0.0],
+            scale=[2.5, 1.1, 1.1],
+        )
+        wheel_box.drawBoxes = True
+        wheel_box.init()
 
-        # wheel_box = addOrientedBoxRoi(
-        #     self,
-        #     name="wheelBoxROIclamped",
-        #     position=[list(i) for i in self.elasticMaterial.dofs.rest_position.value],
-        #     translation=[10.25, 3.0, 0.0],
-        #     eulerRotation=[0.0, 0.0, 0.0],
-        #     scale=[0.9, 1.1, 1.1],
-        # )
-        # wheel_box.drawBoxes = True
-        # wheel_box.init()
+        indices = [[ind for ind in wheel_box.indices.value]]
+        frame = [[0, 0, 0, 0, 0, 0, 1]]
 
-        # indices = [[ind for ind in wheel_box.indices.value]]
-        # frame = [[0, 0, 0, 0, 0, 0, 1]]
+        rigidifiedWheel = Rigidify(
+            self,
+            self.elasticWheel,
+            groupIndices=indices,
+            frames=frame,
+            name="RigidifiedWheel",
+        )
 
-        # rigidifiedStruct = Rigidify(
-        #     self,
-        #     self.elasticMaterial,
-        #     groupIndices=indices,
-        #     frames=frame,
-        #     name="RigidifiedWheel",
-        # )
-
-        # rigidifiedStruct.DeformableParts.addObject('UncoupledConstraintCorrection')
-        # rigidifiedStruct.RigidParts.RigidifiedParticules.addObject('UncoupledConstraintCorrection')
+        rigidifiedWheel.DeformableParts.addObject('UncoupledConstraintCorrection')
+        rigidifiedWheel.RigidParts.RigidifiedParticules.addObject('UncoupledConstraintCorrection')
 
 
+        rigidifiedWheel.RigidParts.addObject(
+            "RigidRigidMapping", index=0, input=self.CubeBot.Red.Articulation.Blue.mstate.getLinkPath()
+        )
 
 
 
@@ -198,6 +202,7 @@ class NoodleRobot(Sofa.Prefab):
                     name="ElasticBody",
                     translation=[0.0, 0.0, 0.0], 
                     rotation=[0.0, 0.0, 0.0],
+                    totalMass=1.0,
                     volumeMeshFileName="mesh/roach/300_torus.msh",
                     surfaceMeshFileName="mesh/roach/2400_torus.obj",
                     collisionMesh="mesh/roach/300_torus.stl"):
@@ -206,9 +211,9 @@ class NoodleRobot(Sofa.Prefab):
         e = body.addChild(
             ElasticMaterialObject(
                 volumeMeshFileName=volumeMeshFileName,
-                poissonRatio=0.3,
-                youngModulus=10080000,
-                totalMass=50.5,
+                poissonRatio=0.1,
+                youngModulus=10000000000,
+                totalMass=totalMass,
                 surfaceColor=[0.4, 1.0, 0.7, 1.0],
                 surfaceMeshFileName=surfaceMeshFileName,
                 translation=translation,
@@ -259,7 +264,7 @@ def createScene(rootNode):
     scene = Scene(
         rootNode,
         dt=0.01,
-        gravity=[0.0, -9.81, 0.0],
+        gravity=[0.0, -981, 0.0],
         iterative=True,
         plugins=pluginList,
     )
