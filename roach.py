@@ -55,6 +55,7 @@ class CubeBot(Sofa.Prefab):
             uniformScale=1.0,
             isAStaticObject=False,
         )
+        cube_red.addObject('UncoupledConstraintCorrection')
 
         angle = cube_red.addChild("Articulation")
         angle.addObject(
@@ -66,6 +67,7 @@ class CubeBot(Sofa.Prefab):
         )
         angle.addObject("RestShapeSpringsForceField", points=0, stiffness=1e10)
         angle.addObject("ArticulatedHierarchyContainer", printLog=False)
+        angle.addObject("UncoupledConstraintCorrection")
 
         articulationCenter = angle.addChild("ArticulationCenter")
         articulationCenter.addObject(
@@ -111,7 +113,6 @@ class NoodleRobot(Sofa.Prefab):
     def __init__(self, *args, **kwargs):
         Sofa.Prefab.__init__(self, *args, **kwargs)
 
-
     def init(self):
         self.elasticMaterial = self.elasticBody()
         self.ElasticBody.init()
@@ -141,7 +142,10 @@ class NoodleRobot(Sofa.Prefab):
             name="RigidifiedStructure",
         )
 
-        self.RigidifiedStructure.RigidParts.addObject(
+        rigidifiedStruct.DeformableParts.addObject('UncoupledConstraintCorrection')
+        rigidifiedStruct.RigidParts.RigidifiedParticules.addObject('UncoupledConstraintCorrection')
+
+        rigidifiedStruct.RigidParts.addObject(
             "RigidRigidMapping", index=0, input=self.CubeBot.Red.mstate.getLinkPath()
         )
 
@@ -220,12 +224,6 @@ def createScene(rootNode):
 
     noodleRobot = NoodleRobot()
     scene.Simulation.addChild(noodleRobot)
-
-    noodleRobot.CubeBot.Red.addObject('UncoupledConstraintCorrection')
-    noodleRobot.CubeBot.Red.Articulation.addObject('UncoupledConstraintCorrection')
-
-    noodleRobot.RigidifiedStructure.DeformableParts.addObject('UncoupledConstraintCorrection')
-    noodleRobot.RigidifiedStructure.RigidParts.RigidifiedParticules.addObject('UncoupledConstraintCorrection')
 
 
     Floor(scene.Modelling, translation=[0.0, -30, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=40, isAStaticObject=True)
