@@ -158,7 +158,7 @@ class NoodleRobot(Sofa.Prefab):
             ElasticMaterialObject(
                 volumeMeshFileName="mesh/100_body.msh",
                 poissonRatio=0.3,
-                youngModulus=100800,
+                youngModulus=10080000,
                 totalMass=50.5,
                 surfaceColor=[0.4, 1.0, 0.7, 1.0],
                 surfaceMeshFileName="mesh/3500_body.stl",
@@ -209,7 +209,7 @@ def createScene(rootNode):
 
     scene = Scene(
         rootNode,
-        dt=0.01,
+        dt=0.001,
         gravity=[0.0, -9.81, 0.0],
         iterative=True,
         plugins=pluginList,
@@ -219,7 +219,7 @@ def createScene(rootNode):
     scene.addObject(
         "CollisionPipeline", name="DefaultPipeline"
     )  # To surpress warning from contactheader.py
-    scene.addContact(alarmDistance=0.3, contactDistance=0.01, frictionCoef=0.1)
+    scene.addContact(alarmDistance=1, contactDistance=0.03, frictionCoef=0.1)
 
 
     noodleRobot = NoodleRobot()
