@@ -226,6 +226,6 @@ def createScene(rootNode):
     scene.Simulation.addChild(noodleRobot)
 
 
-    Floor(scene.Modelling, translation=[0.0, -30, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=40, isAStaticObject=True)
+    Floor(scene.Modelling, translation=[0.0, -3.0, 0.0], rotation=[15.0, 0.0, 0.0], uniformScale=0.40, isAStaticObject=True)
 
     return rootNode
