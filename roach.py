@@ -160,9 +160,9 @@ class NoodleRobot(Sofa.Prefab):
                 totalMass=50.5,
                 surfaceColor=[0.4, 1.0, 0.7, 1.0],
                 surfaceMeshFileName="mesh/roach/2400_torus.obj",
-                translation=[16.5, 3.0, 0.0],
+                translation=[19.5, 3.0, 0.0],
                 rotation=[0.0, 0.0, 0.0],
-                scale=[0.01,0.01,0.01],
+                scale=[0.015,0.015,0.015],
                 collisionMesh="mesh/roach/300_torus.stl",
             )
         )
